@@ -1,0 +1,42 @@
+Received: from relay13.mail.ox.ac.uk (129.67.1.166) by HUB04.ad.oak.ox.ac.uk
+ (163.1.154.215) with Microsoft SMTP Server id 14.3.248.2; Fri, 5 Feb 2016
+ 10:29:05 +0000
+Received: from mail.cs.ox.ac.uk ([129.67.151.64])	by relay13.mail.ox.ac.uk
+ with esmtp (Exim 4.80)	(envelope-from <ug12jf@cs.ox.ac.uk>)	id
+ 1aRddR-0006Ni-hk	for joshua.clark@st-annes.ox.ac.uk; Fri, 05 Feb 2016
+ 10:29:05 +0000
+Received: from tr02.cs.ox.ac.uk ([129.67.150.241]:48147
+ helo=tr02.tcs.cs.ox.ac.uk)	by mail.cs.ox.ac.uk with smtp (Exim 4.84)
+	(envelope-from <ug12jf@cs.ox.ac.uk>)	id 1aRddQ-0007hD-4f	for
+ joshua.clark@st-annes.ox.ac.uk; Fri, 05 Feb 2016 10:29:05 +0000
+Received: by tr02.tcs.cs.ox.ac.uk (sSMTP sendmail emulation); Fri, 05 Feb 2016
+ 10:29:04 +0000
+From: Joe Fowler <ug12jf@cs.ox.ac.uk>
+Date: Fri, 5 Feb 2016 10:29:04 +0000
+To: <joshua.clark@st-annes.ox.ac.uk>
+Subject: Issue #9123
+User-Agent: Heirloom mailx 12.5 7/5/10
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Message-ID: <1454668145-24534@relay13.mail.ox.ac.uk>
+Return-Path: ug12jf@cs.ox.ac.uk
+X-MS-Exchange-Organization-AuthSource: HUB04.ad.oak.ox.ac.uk
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-AVStamp-Mailbox: Sophos;-1577068542;0;PM
+MIME-Version: 1.0
+
+Dear Josh,
+
+
+feature, n:
+	A surprising property of a program.  Occasionaly documented.  To
+	call a property a feature sometimes means the author did not
+	consider that case, and the program makes an unexpected, though
+	not necessarily wrong response.  See BUG.  "That's not a bug, it's
+	a feature!"  A bug can be changed to a feature by documenting it.
+
+
+Kind Regards,
+
+Joe.
+
