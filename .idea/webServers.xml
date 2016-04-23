@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="64c32859-45d7-456f-8b5b-06bddbc9e01d" name="clark.io" url="http://ftp.clark.io">
+        <fileTransfer host="ftp.clark.io" port="21" password="dfdedfc5dfc9dfc9dfcbdfdedfcbdf85df9bdf93df93df9edfc3dfc4dfdedfcfdfc6dfc6dfc3dfc0" username="joshua@clark.io">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

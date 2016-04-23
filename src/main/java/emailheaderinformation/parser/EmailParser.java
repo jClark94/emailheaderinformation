@@ -24,7 +24,9 @@ public class EmailParser {
 	}
 
 	public static void setupParser() {
-		String[] kws = { "Received", "from", "by", "via", "with", "id", "for", ";" };
+		String[] kws = {
+				"Received", "from", "by", "via", "with", "id", "for", ";"
+		};
 		for (String kw : kws) {
 			keywords.add(kw);
 		}
@@ -41,7 +43,9 @@ public class EmailParser {
 			}
 		}
 
-		HeaderTokenizer headerTokenizer = new HeaderTokenizer(stringBuilder.toString(), HeaderTokenizer.MIME);
+		HeaderTokenizer headerTokenizer = new HeaderTokenizer(
+				stringBuilder.toString(),
+				HeaderTokenizer.MIME);
 
 		return createDeviceChain(header, headerTokenizer);
 	}
@@ -52,7 +56,8 @@ public class EmailParser {
 	 * @return
 	 * @throws ParseException
 	 */
-	private static Header createDeviceChain(Header header, HeaderTokenizer headerTokenizer) {
+	private static
+			Header createDeviceChain(Header header, HeaderTokenizer headerTokenizer) {
 		try {
 			Device lastDevice = null;
 			Device firstDevice = null;
@@ -67,18 +72,12 @@ public class EmailParser {
 				lastDevice = device;
 			}
 			header.setStartDevice(firstDevice);
-			/*
-			 * String remaining = headerTokenizer.getRemainder(); String[] keyval =
-			 * remaining.split(": "); for (int i = 0; i < keyval.length-1; i++) { int
-			 * lastSpaceAtKey = keyval[i].lastIndexOf(' '); int lastSpaceAtValue =
-			 * keyval[i+1].lastIndexOf(' ');
-			 * header.fields.put(println(keyval[i].substring(lastSpaceAtKey,
-			 * keyval[i].length())), println(keyval[i+1].substring(0,
-			 * lastSpaceAtValue))); }
-			 */
 
 			return header;
-		} catch (ParseException | java.text.ParseException e) {
+		} catch (ParseException e) {
+			// gotta catch em all and then ignore them
+			return null;
+		} catch (java.text.ParseException e) {
 			// gotta catch em all and then ignore them
 			return null;
 		} catch (NullPointerException e) {
@@ -157,7 +156,8 @@ public class EmailParser {
 				String[] name = extractUntilKeyword(headerTokenizer);
 				builder.setName(name[0]);
 				peeked = name[1];
-			} else if ("id".equals(peeked) || "for".equals(peeked) || "via".equals(peeked)) {
+			} else if ("id".equals(peeked) || "for".equals(peeked)
+					|| "via".equals(peeked)) {
 				peeked = extractUntilKeyword(headerTokenizer)[1];
 			} else if ("with".equals(peeked)) {
 				headerTokenizer.next();
@@ -197,7 +197,8 @@ public class EmailParser {
 		return builder.createDevice();
 	}
 
-	private static String[] extractUntilKeyword(HeaderTokenizer headerTokenizer) throws ParseException {
+	private static String[] extractUntilKeyword(HeaderTokenizer headerTokenizer)
+			throws ParseException {
 		String token = "";
 		String lastSeen;
 		lastSeen = headerTokenizer.peek().getValue();
@@ -207,7 +208,9 @@ public class EmailParser {
 		}
 		println(token);
 		println(lastSeen);
-		String[] ret = { token, lastSeen };
+		String[] ret = {
+				token, lastSeen
+		};
 		return ret;
 	}
 
@@ -224,17 +227,22 @@ public class EmailParser {
 			command.add("python");
 			command.add("HeaderParserTrace.py");
 			command.add(inputEmail);
-			SystemCommandExecutor commandExecutor = new SystemCommandExecutor(command);
+			SystemCommandExecutor commandExecutor = new SystemCommandExecutor(
+					command);
 			int result = commandExecutor.executeCommand();
 			if (result == 0) {
 				StringBuilder output = commandExecutor.getStandardOutputFromCommand();
 				Header header = new Header();
-				HeaderTokenizer ht = new HeaderTokenizer(output.toString(), HeaderTokenizer.MIME);
+				HeaderTokenizer ht = new HeaderTokenizer(
+						output.toString(),
+						HeaderTokenizer.MIME);
 				header = createDeviceChain(header, ht);
 				command.set(1, "HeaderParserFields.py");
-				SystemCommandExecutor commandExecutor1 = new SystemCommandExecutor(command);
+				SystemCommandExecutor commandExecutor1 = new SystemCommandExecutor(
+						command);
 				if (commandExecutor1.executeCommand() == 0) {
-					StringBuilder fields = commandExecutor1.getStandardOutputFromCommand();
+					StringBuilder fields = commandExecutor1
+							.getStandardOutputFromCommand();
 					String[] keyval = fields.toString().split("\n");
 					for (int i = 0; i < keyval.length - 1; i += 2) {
 						header.getFields().put(println(keyval[i]), println(keyval[i + 1]));
