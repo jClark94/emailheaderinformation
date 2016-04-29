@@ -2,74 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7582ea50-10e8-4efa-9697-afcfd312fe06" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/com/devdaily/system/SystemCommandExecutor.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/com/devdaily/system/ThreadedStreamHandler.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/MainWindow$1.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/MainWindow.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/analysers/ClientInferrer.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/analysers/CveAnalyser.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/analysers/ExchangeHeaderAnalyser.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/analysers/HeaderAnalyser.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/analysers/OxfordHeaderAnalyser.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/analysers/VulnerabilityAnalyser.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/analysers/VulnerabilityFinderManager.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/database/DbManager.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Access$Authentication.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Access$Complexity.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Access$Vector.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Access.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/AccessBuilder.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Device.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/DeviceBuilder.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Header.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Impact$Value.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/Impact.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/ImpactBuilder.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/VulnerabilityDisclosure.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/model/VulnerabilityDisclosureBuilder.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/parser/DateUtil.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/target/classes/emailheaderinformation/parser/EmailParser.class" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__aopalliance_aopalliance_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_inject_guice_3_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_logging_commons_logging_1_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_inject_javax_inject_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_mail_mail_1_4_7.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_servlet_servlet_api_2_4.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_8_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_jtidy_jtidy_r938.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_lang3_3_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mongodb_bson_3_2_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mongodb_mongodb_driver_3_2_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_mongodb_mongodb_driver_core_3_2_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_rendersnake_rendersnake_1_9_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_aop_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_beans_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_core_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_expression_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_web_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_webmvc_4_1_6_RELEASE.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/analysers/VulnerabilityAnalyser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/analysers/VulnerabilityFinderManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/database/DbManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/model/Access.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/model/AccessBuilder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/model/Impact.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/model/ImpactBuilder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/model/VulnerabilityDisclosure.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/model/VulnerabilityDisclosureBuilder.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/HeaderParser.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.classpath" afterPath="$PROJECT_DIR$/.classpath" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HeaderParserFields.py" afterPath="$PROJECT_DIR$/HeaderParserFields.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HeaderParserTrace.py" afterPath="$PROJECT_DIR$/HeaderParserTrace.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/emailheaderinformation.eml" afterPath="$PROJECT_DIR$/emailheaderinformation.eml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/emailheaderinformation/MainWindow.java" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/MainWindow.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/emailheaderinformation/analysers/ClientInferrer.java" afterPath="$PROJECT_DIR$/src/main/java/emailheaderinformation/analysers/ClientInferrer.java" />
     </list>
     <ignored path="emailheaderinformation.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -106,11 +39,10 @@
       <file leaf-file-name="MainWindow.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/emailheaderinformation/MainWindow.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="963">
+            <state relative-caret-position="1121">
               <caret line="160" column="60" selection-start-line="160" selection-start-column="60" selection-end-line="160" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4438#4456#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -243,9 +175,9 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="3840" />
-    <option name="y" value="25" />
-    <option name="width" value="3840" />
-    <option name="height" value="2069" />
+    <option name="y" value="15" />
+    <option name="width" value="3838" />
+    <option name="height" value="2143" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -723,8 +655,8 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1132,20 +1064,20 @@
     <option name="totallyTimeSpent" value="28123000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="3840" y="25" width="3840" height="2069" extended-state="0" />
+    <frame x="3840" y="15" width="3838" height="2143" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32813314" sideWeight="0.5021322" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32807103" sideWeight="0.5021322" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32975206" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3188329" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32853982" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.068373814" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.06822971" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1196,13 +1128,46 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/emailheaderinformation/analysers/VulnerabilityAnalyser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1098">
+          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/emailheaderinformation/analysers/ClientInferrer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/emailheaderinformation/model/Header.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/emailheaderinformation/parser/EmailParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/emailheaderinformation/MainWindow.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1247,7 +1212,6 @@
           <caret line="150" column="81" selection-start-line="150" selection-start-column="81" selection-end-line="150" selection-end-column="81" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1308,7 +1272,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1327,7 +1290,6 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1362,7 +1324,6 @@
           <caret line="129" column="37" selection-start-line="129" selection-start-column="37" selection-end-line="129" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1405,7 +1366,6 @@
           <caret line="129" column="23" selection-start-line="129" selection-start-column="23" selection-end-line="129" selection-end-column="23" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1448,7 +1408,6 @@
           <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1459,7 +1418,6 @@
           <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1583,11 +1541,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/emailheaderinformation/MainWindow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="963">
+        <state relative-caret-position="1121">
           <caret line="160" column="60" selection-start-line="160" selection-start-column="60" selection-end-line="160" selection-end-column="60" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4438#4456#0" expanded="true" />
           </folding>
         </state>
       </provider>
