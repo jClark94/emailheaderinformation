@@ -16,6 +16,7 @@ public class ClientInferrer extends HeaderAnalyser {
     private final HashSet<String> outlookAppleKeywords;
 
     public ClientInferrer (Header header, MainWindow mainWindow) {
+        super(header, mainWindow);
         mHeader = header;
         mMainWindow = mainWindow;
 
@@ -31,18 +32,24 @@ public class ClientInferrer extends HeaderAnalyser {
         // Presence of User-Agent string implies Thunderbird
         if (mHeader.getFields().containsKey("User-Agent")) {
 				Object[] arr = {"Application", "Inferred", "Thunderbird", "User-Agent" };
+                mMainWindow.getVfm().lookupVulnerabilityForKeyword("thunderbird");
 				mMainWindow.addToTable(arr);
         } else if (!mHeader.getFields().keySet().stream()
                        .filter(x -> outlookAppleKeywords.contains(x))
                        .collect(Collectors.toList()).isEmpty()) {
             // Presence of keys from outlookAppleKeywords implies Apple Mail
-            // or Thunderbird
+            // or Outlook
             if (mHeader.getFields().containsKey("X-Mailer")) {
                 // If X-Mailer is seen, then more likely to have been sent by
                 // Apple Mail
-
+                Object[] arr = {"Application", "Inferred", "Apple Mail", "X-Mailer" };
+                mMainWindow.addToTable(arr);
+                mMainWindow.getVfm().lookupVulnerabilityForKeyword("apple:mail");
             } else {
                 // Otherwise, more likely to be Outlook
+                Object[] arr = {"Application", "Inferred", "Microsoft Outlook", "Accept-Language" };
+                mMainWindow.addToTable(arr);
+                mMainWindow.getVfm().lookupVulnerabilityForKeyword("outlook");
 
             }
         }

@@ -1,1 +1,1 @@
-/home/joshua/workspace/emailheaderinformation/python/HeaderParserTrace.py
+python/HeaderParserTrace.py
