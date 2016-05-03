@@ -224,7 +224,7 @@ public class EmailParser {
 	public Header parse(String inputEmail) {
 		try {
 			ArrayList<String> command = new ArrayList<String>();
-			command.add("python");
+			command.add("python2");
 			command.add("HeaderParserTrace.py");
 			command.add(inputEmail);
 			SystemCommandExecutor commandExecutor = new SystemCommandExecutor(

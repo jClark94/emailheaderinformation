@@ -1,16 +1,14 @@
 package emailheaderinformation;
 
 import emailheaderinformation.analysers.*;
+import emailheaderinformation.model.FoundInformation;
 import emailheaderinformation.model.Header;
 import emailheaderinformation.parser.EmailParser;
-import org.rendersnake.DocType;
-import org.rendersnake.HtmlCanvas;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,10 +20,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.rendersnake.HtmlAttributesFactory.class_;
-import static org.rendersnake.HtmlAttributesFactory.placeholder;
-import static org.rendersnake.HtmlAttributesFactory.type;
-
 public class MainWindow {
 
     private VulnerabilityFinderManager vfm;
@@ -36,8 +30,7 @@ public class MainWindow {
     private String mInputEmail = "";
     private MainWindow mSelf = this;
     private JTable mFoundInformationTable;
-    private Object[][] mInformationTable;
-    private List<Object[]> mInformationList;
+    private FoundInformation foundInformation;
 
     /**
      * Create the application.
@@ -45,8 +38,6 @@ public class MainWindow {
     public MainWindow () {
         initialize();
         vfm = new VulnerabilityFinderManager(this);
-        mInformationTable = new Object[4][4];
-        mInformationList = new ArrayList<Object[]>();
     }
 
     /**
@@ -143,67 +134,37 @@ public class MainWindow {
             if (vfm.noVulnerabilitiesFound()) {
                 JOptionPane.showMessageDialog(mFrame, "No vulnerabilities found (yet!)");
             } else {
-                HtmlCanvas html = new HtmlCanvas();
-                try {
-                    html.html().render(DocType.HTML5).head()
-                        .title().content("E-Mail Header - Vulnerabilities")
-                        .macros().javascript("http://listjs.com/no-cdn/list.js")
-                        .macros().javascript("https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js")
-                        .macros().stylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
-                        .macros().stylesheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css")
-                        .macros().javascript("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
-                        ._head();
-                    html.body()
-                        .div(class_("container")).h2().content("Vulnerabilities found in e-mail")
-                            .div(class_("cve-entries"))
-                            .input(class_("search").placeholder("Search"))
-                            .button(class_("sort").add("data-sort", "cveid")).content("Sort by name")
-                            .div(class_("table-responsive"))
-                                .table(class_("table table-striped table-hover table-condensed"))
-                                    .thead().tr().th().content("CVE-ID").th().content("Summary")._tr()._thead()
-                                    .tbody(class_("list"));
-
-                    vfm.getVulnerabilities().forEach(vd -> {
-                        try {
-                            html.tr()
-                                    .td(class_("cveid")).content(vd.getCveId())
-                                    .td(class_("summary")).content(vd.getSummary())
-                                ._tr();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                try (InputStream in = MainWindow.class.getResourceAsStream(
+                        "html/result-template-header.html")) {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                    br.lines().forEach((String s) -> {
+                        if (s.contains("${name}")) {
+                            s.replace("${name}", foundInformation.getName());
                         }
                     });
-
-                    html._tbody()._table()._div()._div()._div()
-                            .script(type("text/javascript"))
-                            .write("var options = {\n" +
-                                   "  valueNames: ['cveid', 'summary']\n" +
-                                   "};\n" +
-                                   "\n" +
-                                   "var userList = new List('cve-entries', options);", false)
-                            ._script();
-                    html._body()._html();
-                    System.out.println(html.toHtml());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-        });
+            }});
 
-        inputFrame.add(mOpen);
-        inputFrame.add(mStart);
-        inputFrame.add(mShowVulnerabilities);
+            inputFrame.add(mOpen);
+            inputFrame.add(mStart);
+            inputFrame.add(mShowVulnerabilities);
 
-        String[] columnNames = { "Class", "Type", "Present", "Details" };
-        mFoundInformationTable = new JTable(new DefaultTableModel(columnNames, 0));
-        JScrollPane scrollPane = new JScrollPane(mFoundInformationTable);
+            String[] columnNames = { "Class", "Type", "Present", "Details" };
+            mFoundInformationTable = new JTable(new DefaultTableModel(columnNames, 0));
+            JScrollPane scrollPane = new JScrollPane(mFoundInformationTable);
 
-        blo.add(inputFrame, BorderLayout.PAGE_START);
-        blo.add(scrollPane, BorderLayout.CENTER);
-        mFrame.add(blo);
-    }
+            blo.add(inputFrame, BorderLayout.PAGE_START);
+            blo.add(scrollPane, BorderLayout.CENTER);
+            mFrame.add(blo);
+        }
 
     public VulnerabilityFinderManager getVfm () {
         return vfm;
+    }
+
+    public FoundInformation getFoundInformation () {
+        return foundInformation;
     }
 }

@@ -29,29 +29,37 @@ public class ClientInferrer extends HeaderAnalyser {
     }
 
     public void run () {
+        String product = null;
+        String hint = null;
+        String lookup = null;
         // Presence of User-Agent string implies Thunderbird
         if (mHeader.getFields().containsKey("User-Agent")) {
-				Object[] arr = {"Application", "Inferred", "Thunderbird", "User-Agent" };
-                mMainWindow.getVfm().lookupVulnerabilityForKeyword("thunderbird");
-				mMainWindow.addToTable(arr);
-        } else if (!mHeader.getFields().keySet().stream()
-                       .filter(x -> outlookAppleKeywords.contains(x))
-                       .collect(Collectors.toList()).isEmpty()) {
+            product = "Thunderbird";
+            hint = "User-Agent";
+            lookup = "thunderbird";
+        } else if (!mHeader.getFields().keySet().stream().filter(
+                x -> outlookAppleKeywords.contains(x)).collect(Collectors.toList()).isEmpty()) {
             // Presence of keys from outlookAppleKeywords implies Apple Mail
             // or Outlook
             if (mHeader.getFields().containsKey("X-Mailer")) {
                 // If X-Mailer is seen, then more likely to have been sent by
                 // Apple Mail
-                Object[] arr = {"Application", "Inferred", "Apple Mail", "X-Mailer" };
-                mMainWindow.addToTable(arr);
-                mMainWindow.getVfm().lookupVulnerabilityForKeyword("apple:mail");
+                product = "Apple Mail";
+                hint = "X-Mailer";
+                lookup = "apple:mail";
             } else {
                 // Otherwise, more likely to be Outlook
-                Object[] arr = {"Application", "Inferred", "Microsoft Outlook", "Accept-Language" };
-                mMainWindow.addToTable(arr);
-                mMainWindow.getVfm().lookupVulnerabilityForKeyword("outlook");
-
+                product = "Microsoft Outlook";
+                hint = "Accept-Language";
+                lookup = "outlook";
             }
+        }
+
+        if (product != null) {
+            Object[] arr = { "Application", "Inferred", product, hint };
+            mMainWindow.getVfm().lookupVulnerabilityForKeyword(lookup);
+            mMainWindow.addToTable(arr);
+            mMainWindow.getFoundInformation().setSoftware(product);
         }
     }
 }
