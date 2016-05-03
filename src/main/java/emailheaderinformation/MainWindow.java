@@ -135,7 +135,7 @@ public class MainWindow {
                 JOptionPane.showMessageDialog(mFrame, "No vulnerabilities found (yet!)");
             } else {
                 try (InputStream in = MainWindow.class.getResourceAsStream(
-                        "html/result-template-header.html")) {
+                        "html/result-template.html")) {
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
                     br.lines().forEach((String s) -> {
                         if (s.contains("${name}")) {
