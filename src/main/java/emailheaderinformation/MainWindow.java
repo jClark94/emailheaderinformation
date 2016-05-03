@@ -10,7 +10,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -183,6 +185,9 @@ public class MainWindow {
                                    "var userList = new List('cve-entries', options);", false)
                             ._script();
                     html._body()._html();
+                    File file = new File("/tmp/results.html");
+                    FileWriter fw = new FileWriter(file);
+                    fw.write(html.toHtml().toString());
                     System.out.println(html.toHtml());
                 } catch (IOException e) {
                     e.printStackTrace();
