@@ -14,6 +14,17 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -34,6 +45,11 @@
             <groupId>org.rendersnake</groupId>
             <artifactId>rendersnake</artifactId>
             <version>1.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.bl.wa.whois</groupId>
+            <artifactId>jruby-whois</artifactId>
+            <version>3.5.9.2</version>
         </dependency>
     </dependencies>
 </project>
