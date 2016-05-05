@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .stylish-input-group .input-group-addon {
+            background: white !important;
+        }
+
+        .stylish-input-group .form-control {
+            border-right: 0;
+            box-shadow: 0 0 0;
+            border-color: #ccc;
+        }
+
+        .stylish-input-group button {
+            border: 0;
+            background: transparent;
+        }
+
+        .filter-title {
+            font-weight: bold;
+            font-size: 11px;
+            color: gray;
+            text-align: left;
+        }
+
+        .filter-value {}
+    </style>
+    <!-- jQuery as Bootstrap Dependency and for below -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- List.js and D3.js -->
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>-->
+
+    <!-- Latest compiled and minified CSS for Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme for Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript for Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <meta charset="UTF-8">
+    <title>E-Mail Header Information</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>
+                E-Mail Header Information Results
+            </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>
+                Sender Information
+            </h3>
+                <p>
+                    <em>Name: </em>${name}
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h3>
+                Sender Software
+            </h3>
+                <p>
+                    <em>Software: </em>${software}
+                </p>
+            </div>
+            <div class="col-md-4" id="user-list">
+                <h3>
+                Found usernames
+            </h3>
+
+                <ul class="list"></ul>
+            </div>
+        </div>
+        <div id="fact-list" class="row col-md-12">
+            <table id="fact-table" class="table table-striped table-responsive table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Type</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody class="list">
+                    <!-- to be filled in by list.js -->
+                </tbody>
+            </table>
+        </div>
+        <div id="cve-list" class="col-md-12">
+            <div clas="col-md-12">
+                <div class=col-md-8>
+                    <label for="selectA">Availability: </label>
+                    <select id="selectA">
+                        <option value="0">Clear</option>
+                        <option value="1">None</option>
+                        <option value="2">Partial</option>
+                        <option value="3">Complete</option>
+                    </select>
+                    <label for="selectC">Confidentiality: </label>
+                    <select id="selectC">
+                        <option value="0">Clear</option>
+                        <option value="1">None</option>
+                        <option value="2">Partial</option>
+                        <option value="3">Complete</option>
+                    </select>
+                    <label for="selectI">Integrity: </label>
+                    <select id="selectI">
+                        <option value="0">Clear</option>
+                        <option value="1">None</option>
+                        <option value="2">Partial</option>
+                        <option value="3">Complete</option>
+                    </select>
+                    <label for="selectV">Vector: </label>
+                    <select id="selectV">
+                        <option value="0">Clear</option>
+                        <option value="1">Local</option>
+                        <option value="2">Adjacent</option>
+                        <option value="3">Network</option>
+                    </select>
+                    <label for="selectCo">Complexity: </label>
+                    <select id="selectCo">
+                        <option value="0">Clear</option>
+                        <option value="1">High</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Low</option>
+                    </select>
+                    <label for="selectAu">Authentication: </label>
+                    <select id="selectAu">
+                        <option value="0">Clear</option>
+                        <option value="1">Multiple</option>
+                        <option value="2">Single</option>
+                        <option value="3">None</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group stylish-input-group">
+                        <input type="text" class="form-control" placeholder="Search" id="cve-search-text">
+                        <script>
+                            $(document).ready(function() {
+                                $('#cve-search-button').click(function() {
+                                    filterCvesByTerm(document.getElementById('cve-search-text').value);
+                                });
+                            });
+                        </script>
+                        <!--<input type="button" id="cve-search-button">-->
+                        <span class="input-group-addon">
+                        <button type="submit" id="cve-search-button">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                        </span>
+                        </input>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <table id="cve-table" class="table table-striped table-responsive table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>CVE-ID</th>
+                        <th>Summary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        var dropdowns = [
+            { ui: 'selectA', cve1: "impact", cve2: "availability" },
+            { ui: 'selectC', cve1: "impact", cve2: "confidentiality" },
+            { ui: 'selectI', cve1: "impact", cve2: "integrity" },
+            { ui: 'selectV', cve1: "access", cve2: "vector" },
+            { ui: 'selectCo', cve1: "access", cve2: "complexity" },
+            { ui: 'selectAu', cve1: "access", cve2: "authentication" } ];
+
+        var cveentries = ${cveentries};
+        var factentries = ${factentries};
+        var usernameEntries = ${usernames};
+
+        filterCvesByTerm('');
+
+        var table = document.getElementById("fact-table");
+        for (let fact of factentries) {
+            var newRow = table.insertRow();
+            var newCell = newRow.insertCell(0);
+            var newText = document.createTextNode(fact.factClass);
+            newCell.appendChild(newText);
+            newCell = newRow.insertCell(1);
+            newText = document.createTextNode(fact.factType);
+            newCell.appendChild(newText);
+            newCell = newRow.insertCell(2);
+            newText = document.createTextNode(fact.factDetails);
+            newCell.appendChild(newText);
+        }
+
+        function filterCvesByTerm(search_term) {
+            var table = document.getElementById("cve-table");
+            // leave only the header row
+            while (table.rows.length > 1) {
+                table.deleteRow(1);
+            }
+
+            for (let cve of cveentries) {
+                if (!search_term || ~cve.summary.toLowerCase().indexOf(search_term.toLowerCase())) {
+                    var isEligible = true;
+                    for (let dd of dropdowns) {
+                        isEligible = isEligible &&
+                          (!!($("#" + dd.ui + " :selected").val())) ||
+                          (cve[dd.cve1] &&
+                            cve[dd.cve1][dd.cve2] &&
+                            ~cve[dd.cve1][dd.cve2].indexOf(
+                              $("#" + dd.ui + " :selected").text().toUpperCase()));
+                    }
+                    if (isEligible) {
+                      var newRow = table.insertRow();
+                      if (cve.score < 2.5) {
+                          newRow.className += "active";
+                      } else if (cve.score < 5.0) {
+                          newRow.className += "success";
+                      } else if (cve.score < 7.5) {
+                          newRow.className += "warning";
+                      } else {
+                          newRow.className += "danger";
+                      }
+                      var newCell = newRow.insertCell(0);
+                      var newText = document.createTextNode(cve.cveId);
+                      newCell.appendChild(newText);
+                      newCell = newRow.insertCell(1);
+                      newText = document.createTextNode(cve.summary);
+                      newCell.appendChild(newText);
+                  }
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>
