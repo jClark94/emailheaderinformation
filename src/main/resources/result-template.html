@@ -26,6 +26,22 @@
         }
 
         .filter-value {}
+
+        .bar rect {
+            fill: steelblue;
+            shape-rendering: crispEdges;
+        }
+
+        .bar text {
+            fill: #fff;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
     </style>
     <!-- jQuery as Bootstrap Dependency and for below -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -73,12 +89,9 @@
                     <em>Software: </em>${software}
                 </p>
             </div>
-            <div class="col-md-4" id="user-list">
-                <h3>
-                Found usernames
-            </h3>
-
-                <ul class="list"></ul>
+            <div class="col-md-4">
+                <h3>Found usernames</h3>
+                <ul id="user-list"></ul>
             </div>
         </div>
         <div id="fact-list" class="row col-md-12">
@@ -175,19 +188,42 @@
         </div>
     </div>
     <script>
-        var dropdowns = [
-            { ui: 'selectA', cve1: "impact", cve2: "availability" },
-            { ui: 'selectC', cve1: "impact", cve2: "confidentiality" },
-            { ui: 'selectI', cve1: "impact", cve2: "integrity" },
-            { ui: 'selectV', cve1: "access", cve2: "vector" },
-            { ui: 'selectCo', cve1: "access", cve2: "complexity" },
-            { ui: 'selectAu', cve1: "access", cve2: "authentication" } ];
+        var dropdowns = [{
+            ui: 'selectA',
+            cve1: "impact",
+            cve2: "availability"
+        }, {
+            ui: 'selectC',
+            cve1: "impact",
+            cve2: "confidentiality"
+        }, {
+            ui: 'selectI',
+            cve1: "impact",
+            cve2: "integrity"
+        }, {
+            ui: 'selectV',
+            cve1: "access",
+            cve2: "vector"
+        }, {
+            ui: 'selectCo',
+            cve1: "access",
+            cve2: "complexity"
+        }, {
+            ui: 'selectAu',
+            cve1: "access",
+            cve2: "authentication"
+        }];
 
         var cveentries = ${cveentries};
         var factentries = ${factentries};
         var usernameEntries = ${usernames};
 
         filterCvesByTerm('');
+
+        for (let user of usernameEntries) {
+          $('#user-list').append('<li><em>' + user.context + '</em><br/>' + user.username + '</li>');
+        }
+
 
         var table = document.getElementById("fact-table");
         for (let fact of factentries) {
@@ -215,33 +251,115 @@
                     var isEligible = true;
                     for (let dd of dropdowns) {
                         isEligible = isEligible &&
-                          (!!($("#" + dd.ui + " :selected").val())) ||
-                          (cve[dd.cve1] &&
-                            cve[dd.cve1][dd.cve2] &&
-                            ~cve[dd.cve1][dd.cve2].indexOf(
-                              $("#" + dd.ui + " :selected").text().toUpperCase()));
+                            (!!($("#" + dd.ui + " :selected").val())) ||
+                            (cve[dd.cve1] &&
+                                cve[dd.cve1][dd.cve2] &&
+                                ~cve[dd.cve1][dd.cve2].indexOf(
+                                    $('#' + dd.ui + ' :selected').text().toUpperCase()));
                     }
                     if (isEligible) {
-                      var newRow = table.insertRow();
-                      if (cve.score < 2.5) {
-                          newRow.className += "active";
-                      } else if (cve.score < 5.0) {
-                          newRow.className += "success";
-                      } else if (cve.score < 7.5) {
-                          newRow.className += "warning";
-                      } else {
-                          newRow.className += "danger";
-                      }
-                      var newCell = newRow.insertCell(0);
-                      var newText = document.createTextNode(cve.cveId);
-                      newCell.appendChild(newText);
-                      newCell = newRow.insertCell(1);
-                      newText = document.createTextNode(cve.summary);
-                      newCell.appendChild(newText);
-                  }
+                        var newRow = table.insertRow();
+                        if (cve.score < 2.5) {
+                            newRow.className += "active";
+                        } else if (cve.score < 5.0) {
+                            newRow.className += "success";
+                        } else if (cve.score < 7.5) {
+                            newRow.className += "warning";
+                        } else {
+                            newRow.className += "danger";
+                        }
+                        var newCell = newRow.insertCell(0);
+                        var newText = document.createTextNode(cve.cveId);
+                        newCell.appendChild(newText);
+                        newCell = newRow.insertCell(1);
+                        newText = document.createTextNode(cve.summary);
+                        newCell.appendChild(newText);
+                    }
                 }
             }
         };
+
+        var products = ${products};
+
+        // set up distribution graphs of CVE scores for each product found
+        for (let prod of products) {
+            // Generate a Bates distribution of 10 random variables.
+            // var values = d3.range(1000).map(d3.random.bates(10));
+            var values = [];
+            for (let cve of cveentries) {
+                if (cve.product.indexOf(prod) > -1) {
+                    values.push(cve.score);
+                }
+            }
+
+            // A formatter for counts.
+            var formatCount = d3.format(",.0f");
+
+            var margin = {
+                    top: 10,
+                    right: 30,
+                    bottom: 30,
+                    left: 30
+                },
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            var x = d3.scale.linear()
+                .domain([0, 10])
+                .range([0, width]);
+
+            // Generate a histogram using twenty uniformly-spaced bins.
+            var data = d3.layout.histogram()
+                .bins(x.ticks(20))
+                (values);
+
+            var y = d3.scale.linear()
+                .domain([0, d3.max(data, function(d) {
+                    return d.y;
+                })])
+                .range([height, 0]);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+            d3.select("body").append("h3").text(prod);
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var bar = svg.selectAll(".bar")
+                .data(data)
+                .enter().append("g")
+                .attr("class", "bar")
+                .attr("transform", function(d) {
+                    return "translate(" + x(d.x) + "," + y(d.y) + ")";
+                });
+
+            bar.append("rect")
+                .attr("x", 1)
+                .attr("width", x(data[0].dx) - 1)
+                .attr("height", function(d) {
+                    return height - y(d.y);
+                });
+
+            bar.append("text")
+                .attr("dy", ".75em")
+                .attr("y", 6)
+                .attr("x", x(data[0].dx) / 2)
+                .attr("text-anchor", "middle")
+                .text(function(d) {
+                    return formatCount(d.y);
+                });
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+        }
     </script>
 </body>
 
