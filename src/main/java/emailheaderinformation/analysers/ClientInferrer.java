@@ -3,6 +3,7 @@ package emailheaderinformation.analysers;
 import emailheaderinformation.MainWindow;
 import emailheaderinformation.model.Header;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
@@ -10,8 +11,8 @@ import java.util.stream.Collectors;
  * Uses results found in http://isyou.info/jisis/vol5/no1/jisis-2015-vol5-no1-04.pdf
  */
 public class ClientInferrer extends HeaderAnalyser {
-    final Header mHeader;
-    final MainWindow mMainWindow;
+    private final Header mHeader;
+    private final MainWindow mMainWindow;
 
     private final HashSet<String> outlookAppleKeywords;
 
@@ -21,11 +22,9 @@ public class ClientInferrer extends HeaderAnalyser {
         mMainWindow = mainWindow;
 
         String[] kws = { "Accept-Language", "Content-Language", "Threat-Index", "Threat-Topic" };
-        outlookAppleKeywords = new HashSet<String>();
+        outlookAppleKeywords = new HashSet<>();
 
-        for (String keyword : kws) {
-            outlookAppleKeywords.add(keyword);
-        }
+        Collections.addAll(outlookAppleKeywords, kws);
     }
 
     public void run () {
@@ -38,7 +37,7 @@ public class ClientInferrer extends HeaderAnalyser {
             hint = "User-Agent";
             lookup = "thunderbird";
         } else if (!mHeader.getFields().keySet().stream().filter(
-                x -> outlookAppleKeywords.contains(x)).collect(Collectors.toList()).isEmpty()) {
+                outlookAppleKeywords:: contains).collect(Collectors.toList()).isEmpty()) {
             // Presence of keys from outlookAppleKeywords implies Apple Mail
             // or Outlook
             if (mHeader.getFields().containsKey("X-Mailer")) {
@@ -56,9 +55,9 @@ public class ClientInferrer extends HeaderAnalyser {
         }
 
         if (product != null) {
-            Object[] arr = { "Application", "Inferred", product, hint };
-            mMainWindow.getVfm().lookupVulnerabilityForKeyword(lookup);
+            Object[] arr = { "Application", product, "Inferred", hint };
             mMainWindow.addToTable(arr);
+            mMainWindow.getVfm().lookupVulnerabilityForKeyword(lookup);
             mMainWindow.getFoundInformation().setSoftware(product);
         }
     }
