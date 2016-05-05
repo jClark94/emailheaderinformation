@@ -1,5 +1,6 @@
 package emailheaderinformation;
 
+import com.google.gson.Gson;
 import emailheaderinformation.analysers.*;
 import emailheaderinformation.model.FoundInformation;
 import emailheaderinformation.model.Header;
@@ -30,7 +31,7 @@ public class MainWindow {
     private String mInputEmail = "";
     private MainWindow mSelf = this;
     private JTable mFoundInformationTable;
-    private FoundInformation foundInformation;
+    private FoundInformation foundInformation = new FoundInformation();
 
     /**
      * Create the application.
@@ -44,14 +45,12 @@ public class MainWindow {
      * Launch the application.
      */
     public static void main (String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run () {
-                try {
-                    MainWindow window = new MainWindow();
-                    window.mFrame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                MainWindow window = new MainWindow();
+                window.mFrame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -60,6 +59,7 @@ public class MainWindow {
      * Add new information to the table
      */
     public synchronized void addToTable (Object[] arr) {
+        foundInformation.addFact((String) arr[0], (String) arr[1], (String) arr[3]);
         DefaultTableModel model = (DefaultTableModel) mFoundInformationTable.getModel();
         model.addRow(arr);
     }
@@ -112,10 +112,12 @@ public class MainWindow {
             HeaderAnalyser oha = new OxfordHeaderAnalyser(header, mSelf);
             HeaderAnalyser eha = new ExchangeHeaderAnalyser(header, mSelf);
             HeaderAnalyser ci = new ClientInferrer(header, mSelf);
-            Collection<Callable<Object>> has = new ArrayList<Callable<Object>>();
+            HeaderAnalyser si = new SenderInformationExtractor(header, mSelf);
+            Collection<Callable<Object>> has = new ArrayList<>();
             has.add(Executors.callable(oha));
             has.add(Executors.callable(eha));
             has.add(Executors.callable(ci));
+            has.add(Executors.callable(si));
             ExecutorService executor = Executors.newFixedThreadPool(8);
             try {
                 executor.invokeAll(has);
@@ -134,31 +136,77 @@ public class MainWindow {
             if (vfm.noVulnerabilitiesFound()) {
                 JOptionPane.showMessageDialog(mFrame, "No vulnerabilities found (yet!)");
             } else {
-                try (InputStream in = MainWindow.class.getResourceAsStream(
-                        "html/result-template.html")) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                File file = new File("/home/jaclark/workspace/emailheaderinformation/src/main" +
+                                     "/resources/result-template.html");
+                try (InputStream in = new FileInputStream(file)) {
+                    InputStreamReader isr = new InputStreamReader(in);
+                    BufferedReader br = new BufferedReader(isr);
+                    StringBuilder webPage = new StringBuilder();
                     br.lines().forEach((String s) -> {
                         if (s.contains("${name}")) {
-                            s.replace("${name}", foundInformation.getName());
+                            System.out.println(foundInformation.getName());
+                            webPage.append(s.replace("${name}", foundInformation.getName()));
+                        } else if (s.contains("${cveentries}")) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append('[');
+                            vfm.getVulnerabilities().forEach(vd -> {
+                                Gson gson = new Gson();
+                                sb.append(gson.toJson(vd).toString());
+                                sb.append(',');
+                                sb.append(System.lineSeparator());
+                            });
+                            sb.append(']');
+                            webPage.append(s.replace("${cveentries}", sb.toString()));
+                        } else if (s.contains("${factentries}")) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append('[');
+                            foundInformation.getFacts().forEach(f -> {
+                                Gson gson = new Gson();
+                                sb.append(gson.toJson(f).toString());
+                                sb.append(',');
+                                sb.append(System.lineSeparator());
+                            });
+                            sb.append(']');
+                            webPage.append(s.replace("${factentries}", sb.toString()));
+                        } else if (s.contains("${usernames}")) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append('[');
+                            foundInformation.getUsernameList().forEach(u -> {
+                                Gson gson = new Gson();
+                                sb.append(gson.toJson(u).toString());
+                                sb.append(',');
+                                sb.append(System.lineSeparator());
+                            });
+                            sb.append(']');
+                            webPage.append(s.replace("${usernames}", sb.toString()));
+                        } else if (s.contains("${software}")) {
+                            webPage.append(
+                                    s.replace("${software}", foundInformation.getSoftware()));
+                        } else {
+                            webPage.append(s);
                         }
+                        webPage.append(System.lineSeparator());
                     });
+                    Path out = Paths.get("/tmp/webpage.html");
+                    Files.write(out, webPage.toString().getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }});
+            }
+        });
 
-            inputFrame.add(mOpen);
-            inputFrame.add(mStart);
-            inputFrame.add(mShowVulnerabilities);
+        inputFrame.add(mOpen);
+        inputFrame.add(mStart);
+        inputFrame.add(mShowVulnerabilities);
 
-            String[] columnNames = { "Class", "Type", "Present", "Details" };
-            mFoundInformationTable = new JTable(new DefaultTableModel(columnNames, 0));
-            JScrollPane scrollPane = new JScrollPane(mFoundInformationTable);
+        String[] columnNames = { "Class", "Type", "Present", "Details" };
+        mFoundInformationTable = new JTable(new DefaultTableModel(columnNames, 0));
+        JScrollPane scrollPane = new JScrollPane(mFoundInformationTable);
 
-            blo.add(inputFrame, BorderLayout.PAGE_START);
-            blo.add(scrollPane, BorderLayout.CENTER);
-            mFrame.add(blo);
-        }
+        blo.add(inputFrame, BorderLayout.PAGE_START);
+        blo.add(scrollPane, BorderLayout.CENTER);
+        mFrame.add(blo);
+    }
 
     public VulnerabilityFinderManager getVfm () {
         return vfm;
