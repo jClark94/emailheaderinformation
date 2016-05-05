@@ -9,27 +9,40 @@ import java.util.List;
 public class FoundInformation {
     private String name;
     private String software;
-    private String hardware;
+    private List<Fact> facts = new ArrayList<>();
 
-    public void setName (String name) {
-        this.name = name;
+    public List<Username> getUsernameList () {
+        return usernameList;
     }
+
+    private List<Username> usernameList = new ArrayList<Username>();
 
     public void setSoftware (String software) {
         this.software = software;
     }
 
-    public void setHardware (String hardware) {
-        this.hardware = hardware;
-    }
-
-    public void addUsername(String context, String username) {
+    public void addUsername (String context, String username) {
         usernameList.add(new Username(context, username));
     }
 
-    private List<Username> usernameList = new ArrayList<Username>();
-
     public String getName () {
-        return name;
+        return name == null ? "Not found" : name;
+    }
+
+    public void setName (String name) {
+        System.out.printf("Name: %s%n", name);
+        this.name = name;
+    }
+
+    public void addFact (String factClass, String factType, String factDetails) {
+        facts.add(new Fact(factClass, factType, factDetails));
+    }
+
+    public List<Fact> getFacts () {
+        return facts;
+    }
+
+    public String getSoftware () {
+        return software;
     }
 }
