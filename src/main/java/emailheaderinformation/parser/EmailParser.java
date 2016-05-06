@@ -74,10 +74,7 @@ public class EmailParser {
 			header.setStartDevice(firstDevice);
 
 			return header;
-		} catch (ParseException e) {
-			// gotta catch em all and then ignore them
-			return null;
-		} catch (java.text.ParseException e) {
+		} catch (java.text.ParseException | ParseException e) {
 			// gotta catch em all and then ignore them
 			return null;
 		} catch (NullPointerException e) {

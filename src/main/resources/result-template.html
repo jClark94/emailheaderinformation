@@ -295,15 +295,6 @@
             // A formatter for counts.
             var formatCount = d3.format(",.0f");
 
-            var margin = {
-                    top: 10,
-                    right: 30,
-                    bottom: 30,
-                    left: 30
-                },
-                width = 960 - margin.left - margin.right,
-                height = 500 - margin.top - margin.bottom;
-
             var x = d3.scale.linear()
                 .domain([0, 10])
                 .range([0, width]);
@@ -323,9 +314,24 @@
                 .scale(x)
                 .orient("bottom");
 
-            d3.select("body").append("h3").text(prod);
+            d3.select("#fact-list")
+              .append("div")
+              .attr("id", "div-" + prod.replace(':', ""))
+              .attr("class", "col-md-6")
+              .append("h3").text(prod);
 
-            var svg = d3.select("body").append("svg")
+
+            var margin = {
+                    top: 10,
+                    right: 30,
+                    bottom: 30,
+                    left: 30
+                },
+                width = $('#div-' + prod.replace(':', "")).width() - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
+
+
+            var svg = d3.select('#div-' + prod.replace(':', "")).insert("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")

@@ -27,7 +27,10 @@ public class WhoIsAnalyser extends HeaderAnalyser {
 
     @Override public void run () {
         JRubyWhois jRubyWhoIs = new JRubyWhois();
-        System.out.println(jRubyWhoIs.lookup("google.com").getAdminContacts().get(0).getOrganization().toString());
+        System.out.println(jRubyWhoIs.lookup("google.com")
+                                     .getAdminContacts()
+                                     .get(0)
+                                     .getOrganization());
 
 
     }

@@ -14,26 +14,21 @@ import java.util.stream.Stream;
 
 import static com.mongodb.client.model.Filters.*;
 
-/**
- * Created by jaclark on 19/04/16.
- */
 public class DbManager {
   private MongoCollection<Document> coll;
-  private MongoClient mc;
-  private MongoDatabase db;
 
   public DbManager() {
     init();
   }
 
   private void init() {
-    mc = new MongoClient();
-    db = mc.getDatabase("cvedb");
+    MongoClient mc = new MongoClient();
+    MongoDatabase db = mc.getDatabase("cvedb");
     coll = db.getCollection("cves");
   }
 
   public Stream<String> findVulnerabilitiesForProduct(String product) {
-    List<String> vulns = new ArrayList<String>();
+    List<String> vulns = new ArrayList<>();
     findVulnerabilities(product).forEach((Block<? super Document>) document -> {
       vulns.add(document.toJson());
     });
@@ -55,5 +50,4 @@ public class DbManager {
         regex("vulnerable_configuration", product)))
                .projection(Projections.excludeId());
   }
-
 }

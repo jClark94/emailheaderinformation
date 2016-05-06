@@ -25,9 +25,7 @@ public class MainWindow {
 
   private VulnerabilityFinderManager vfm;
   private JFrame mFrame;
-  private JButton mOpen;
   private JButton mStart;
-  private JButton mShowVulnerabilities;
   private String mInputEmail = "";
   private MainWindow mSelf = this;
   private JTable mFoundInformationTable;
@@ -49,10 +47,9 @@ public class MainWindow {
     mFrame.setBounds(100, 100, 450, 300);
     mFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     JPanel blo = new JPanel(new BorderLayout());
-    JPanel analyserFrame = new JPanel();
 
     JPanel inputFrame = new JPanel();
-    mOpen = new JButton();
+    JButton mOpen = new JButton();
     final JFileChooser fc = new JFileChooser();
     mOpen.setText("Open Email file");
     mOpen.setHorizontalAlignment(SwingConstants.LEFT);
@@ -105,7 +102,7 @@ public class MainWindow {
 
     });
 
-    mShowVulnerabilities = new JButton();
+    JButton mShowVulnerabilities = new JButton();
     mShowVulnerabilities.setText("Show Found CVEs");
     mShowVulnerabilities.setHorizontalAlignment(SwingConstants.RIGHT);
     mShowVulnerabilities.setEnabled(true);
@@ -127,7 +124,7 @@ public class MainWindow {
               StringBuilder sb = new StringBuilder();
               sb.append('[');
               vfm.getVulnerabilities().forEach(vd -> {
-                sb.append(gson.toJson(vd).toString());
+                sb.append(gson.toJson(vd));
                 sb.append(',');
                 sb.append(System.lineSeparator());
               });
@@ -137,7 +134,7 @@ public class MainWindow {
               StringBuilder sb = new StringBuilder();
               sb.append('[');
               foundInformation.getFacts().forEach(f -> {
-                sb.append(gson.toJson(f).toString());
+                sb.append(gson.toJson(f));
                 sb.append(',');
                 sb.append(System.lineSeparator());
               });
@@ -147,7 +144,7 @@ public class MainWindow {
               StringBuilder sb = new StringBuilder();
               sb.append('[');
               foundInformation.getUsernameList().forEach(u -> {
-                sb.append(gson.toJson(u).toString());
+                sb.append(gson.toJson(u));
                 sb.append(',');
                 sb.append(System.lineSeparator());
               });
