@@ -7,42 +7,41 @@ import java.util.List;
  * Created by jaclark on 03/05/16.
  */
 public class FoundInformation {
-    private String name;
-    private String software;
-    private List<Fact> facts = new ArrayList<>();
+  private String name;
+  private String software;
+  private List<Fact> facts = new ArrayList<>();
+  private List<Username> usernameList = new ArrayList<Username>();
 
-    public List<Username> getUsernameList () {
-        return usernameList;
-    }
+  public List<Username> getUsernameList () {
+    return usernameList;
+  }
 
-    private List<Username> usernameList = new ArrayList<Username>();
+  public void addUsername (String context, String username) {
+    usernameList.add(new Username(context, username));
+  }
 
-    public void setSoftware (String software) {
-        this.software = software;
-    }
+  public String getName () {
+    return name == null ? "Not found" : name;
+  }
 
-    public void addUsername (String context, String username) {
-        usernameList.add(new Username(context, username));
-    }
+  public void setName (String name) {
+    System.out.printf("Name: %s%n", name);
+    this.name = name;
+  }
 
-    public String getName () {
-        return name == null ? "Not found" : name;
-    }
+  public void addFact (String factClass, String factType, String factDetails) {
+    facts.add(new Fact(factClass, factType, factDetails));
+  }
 
-    public void setName (String name) {
-        System.out.printf("Name: %s%n", name);
-        this.name = name;
-    }
+  public List<Fact> getFacts () {
+    return facts;
+  }
 
-    public void addFact (String factClass, String factType, String factDetails) {
-        facts.add(new Fact(factClass, factType, factDetails));
-    }
+  public String getSoftware () {
+    return software;
+  }
 
-    public List<Fact> getFacts () {
-        return facts;
-    }
-
-    public String getSoftware () {
-        return software;
-    }
+  public void setSoftware (String software) {
+    this.software = software;
+  }
 }

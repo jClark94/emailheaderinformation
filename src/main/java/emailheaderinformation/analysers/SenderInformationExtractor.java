@@ -13,8 +13,7 @@ public class SenderInformationExtractor extends HeaderAnalyser {
     int emailStart = fromField.indexOf("<");
     mMainWindow.getFoundInformation().setName(fromField.substring(0, emailStart - 1));
     Object[] arr = {
-        "Personal", "Sender Information", "Yes", fromField.substring(0, emailStart - 1)
-    };
+        "Personal", "Sender Information", "Yes", fromField.substring(0, emailStart - 1) };
     mMainWindow.addToTable(arr);
 
     return null;

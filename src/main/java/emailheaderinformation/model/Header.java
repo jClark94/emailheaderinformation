@@ -4,27 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Header {
-	public Header() {
-		super();
-	}
+  private Device startDevice;
+  private Map<String, String> fields = new HashMap<String, String>();
 
-	public Device getStartDevice() {
-		return startDevice;
-	}
+  public Header () {
+    super();
+  }
 
-	public void setStartDevice(Device startDevice) {
-		this.startDevice = startDevice;
-	}
+  public Device getStartDevice () {
+    return startDevice;
+  }
 
-	public Map<String, String> getFields() {
-		return fields;
-	}
+  public void setStartDevice (Device startDevice) {
+    this.startDevice = startDevice;
+  }
 
-	public void setFields(Map<String, String> fields) {
-		this.fields = fields;
-	}
+  public Map<String, String> getFields () {
+    return fields;
+  }
 
-	private Device startDevice;
-	private Map<String, String> fields = new HashMap<String, String>();
+  public void setFields (Map<String, String> fields) {
+    this.fields = fields;
+  }
 
 }

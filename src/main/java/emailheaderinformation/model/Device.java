@@ -3,44 +3,44 @@ package emailheaderinformation.model;
 import java.util.Date;
 
 public class Device {
-	private Device next;
-	private final String name;
-	private final String software;
-	private final Date receivedTime;
-	private final String origin;
-	private boolean setNext = false;
+  private final String name;
+  private final String software;
+  private final Date receivedTime;
+  private final String origin;
+  private Device next;
+  private boolean setNext = false;
 
-	public Device(Device next, String name, String software, Date receivedTime, String origin) {
-		this.name = name;
-		this.software = software;
-		this.receivedTime = receivedTime;
-		this.origin = origin;
-	}
+  public Device (Device next, String name, String software, Date receivedTime, String origin) {
+    this.name = name;
+    this.software = software;
+    this.receivedTime = receivedTime;
+    this.origin = origin;
+  }
 
-	public Device getNext() {
-		return next;
-	}
+  public Device getNext () {
+    return next;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setNext (Device next) {
+    if (!setNext) {
+      this.next = next;
+      setNext = true;
+    }
+  }
 
-	public String getSoftware() {
-		return software;
-	}
+  public String getName () {
+    return name;
+  }
 
-	public Date getReceivedTime() {
-		return receivedTime;
-	}
+  public String getSoftware () {
+    return software;
+  }
 
-	public String getOrigin() {
-		return origin;
-	}
+  public Date getReceivedTime () {
+    return receivedTime;
+  }
 
-	public void setNext(Device next) {
-		if (!setNext) {
-			this.next = next;
-			setNext = true;
-		}
-	}
+  public String getOrigin () {
+    return origin;
+  }
 }

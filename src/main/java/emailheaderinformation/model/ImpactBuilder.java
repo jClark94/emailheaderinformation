@@ -7,22 +7,22 @@ public class ImpactBuilder {
   private Value confidentiality;
   private Value integrity;
 
-  public ImpactBuilder setAvailability(Value availability) {
+  public ImpactBuilder setAvailability (Value availability) {
     this.availability = availability;
     return this;
   }
 
-  public ImpactBuilder setConfidentiality(Value confidentiality) {
+  public ImpactBuilder setConfidentiality (Value confidentiality) {
     this.confidentiality = confidentiality;
     return this;
   }
 
-  public ImpactBuilder setIntegrity(Value integrity) {
+  public ImpactBuilder setIntegrity (Value integrity) {
     this.integrity = integrity;
     return this;
   }
 
-  public Impact createImpact() {
+  public Impact createImpact () {
     return new Impact(availability, confidentiality, integrity);
   }
 }

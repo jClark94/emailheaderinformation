@@ -5,21 +5,21 @@ public class Access {
   private Complexity complexity;
   private Authentication authentication;
 
-  Access(Vector vector, Complexity complexity, Authentication authentication) {
+  Access (Vector vector, Complexity complexity, Authentication authentication) {
     this.vector = vector;
     this.complexity = complexity;
     this.authentication = authentication;
   }
 
-  public Vector getVector() {
+  public Vector getVector () {
     return vector;
   }
 
-  public Complexity getComplexity() {
+  public Complexity getComplexity () {
     return complexity;
   }
 
-  public Authentication getAuthentication() {
+  public Authentication getAuthentication () {
     return authentication;
   }
 

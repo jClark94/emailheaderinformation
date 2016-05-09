@@ -27,6 +27,11 @@ public class ClientInferrer extends HeaderAnalyser {
     Collections.addAll(outlookAppleKeywords, kws);
   }
 
+  @Override public Object call () throws Exception {
+    run();
+    return null;
+  }
+
   private void run () {
     String product = null;
     String hint = null;
@@ -37,11 +42,11 @@ public class ClientInferrer extends HeaderAnalyser {
       hint = "User-Agent";
       lookup = "thunderbird";
     } else if (!mHeader.getFields()
-                       .keySet()
-                       .stream()
-                       .filter(outlookAppleKeywords:: contains)
-                       .collect(Collectors.toList())
-                       .isEmpty()) {
+                    .keySet()
+                    .stream()
+                    .filter(outlookAppleKeywords:: contains)
+                    .collect(Collectors.toList())
+                    .isEmpty()) {
       // Presence of keys from outlookAppleKeywords implies Apple Mail
       // or Outlook
       if (mHeader.getFields().containsKey("X-Mailer")) {
@@ -64,10 +69,5 @@ public class ClientInferrer extends HeaderAnalyser {
       mMainWindow.getVfm().lookupVulnerabilityForKeyword(lookup);
       mMainWindow.getFoundInformation().setSoftware(product);
     }
-  }
-
-  @Override public Object call () throws Exception {
-    run();
-    return null;
   }
 }

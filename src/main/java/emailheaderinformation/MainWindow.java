@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-import static java.util.concurrent.Executors.*;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class MainWindow {
 
@@ -34,11 +34,6 @@ public class MainWindow {
   private JTable mFoundInformationTable;
   private FoundInformation foundInformation = new FoundInformation();
   private ExecutorService mExecutorService = newFixedThreadPool(8);
-
-  public Future submitToExecutorService (Callable task) {
-    return mExecutorService.submit(task);
-  }
-
 
   /**
    * Create the application.
@@ -205,6 +200,10 @@ public class MainWindow {
         e.printStackTrace();
       }
     });
+  }
+
+  public Future submitToExecutorService (Callable task) {
+    return mExecutorService.submit(task);
   }
 
   /**

@@ -42,6 +42,7 @@
             stroke: #000;
             shape-rendering: crispEdges;
         }
+
     </style>
     <!-- jQuery as Bootstrap Dependency and for below -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -51,143 +52,155 @@
     <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.2.0/list.min.js"></script>-->
 
     <!-- Latest compiled and minified CSS for Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+          crossorigin="anonymous">
 
     <!-- Optional theme for Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+          crossorigin="anonymous">
 
     <!-- Latest compiled and minified JavaScript for Bootstrap -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+            crossorigin="anonymous"></script>
 
     <meta charset="UTF-8">
     <title>E-Mail Header Information</title>
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>
                 E-Mail Header Information Results
             </h2>
-            </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <h3>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>
                 Sender Information
             </h3>
-                <p>
-                    <em>Name: </em>${name}
-                </p>
-            </div>
-            <div class="col-md-4">
-                <h3>
+            <p>
+                <em>Name: </em>${name}
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h3>
                 Sender Software
             </h3>
-                <p>
-                    <em>Software: </em>${software}
-                </p>
+            <p>
+                <em>Software: </em>${software}
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h3>Found usernames</h3>
+            <ul id="user-list"></ul>
+        </div>
+    </div>
+    <div id="fact-list" class="row col-md-12">
+        <table id="fact-table"
+               class="table table-striped table-responsive table-bordered table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>Class</th>
+                <th>Type</th>
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody class="list">
+            <!-- to be filled in by list.js -->
+            </tbody>
+        </table>
+    </div>
+    <div id="cve-list" class="col-md-12">
+        <div clas="col-md-12">
+            <div class=col-md-8>
+                <label for="selectA">Availability: </label>
+                <select id="selectA">
+                    <option value="0">Clear</option>
+                    <option value="1">None</option>
+                    <option value="2">Partial</option>
+                    <option value="3">Complete</option>
+                </select>
+                <label for="selectC">Confidentiality: </label>
+                <select id="selectC">
+                    <option value="0">Clear</option>
+                    <option value="1">None</option>
+                    <option value="2">Partial</option>
+                    <option value="3">Complete</option>
+                </select>
+                <label for="selectI">Integrity: </label>
+                <select id="selectI">
+                    <option value="0">Clear</option>
+                    <option value="1">None</option>
+                    <option value="2">Partial</option>
+                    <option value="3">Complete</option>
+                </select>
+                <label for="selectV">Vector: </label>
+                <select id="selectV">
+                    <option value="0">Clear</option>
+                    <option value="1">Local</option>
+                    <option value="2">Adjacent</option>
+                    <option value="3">Network</option>
+                </select>
+                <label for="selectCo">Complexity: </label>
+                <select id="selectCo">
+                    <option value="0">Clear</option>
+                    <option value="1">High</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Low</option>
+                </select>
+                <label for="selectAu">Authentication: </label>
+                <select id="selectAu">
+                    <option value="0">Clear</option>
+                    <option value="1">Multiple</option>
+                    <option value="2">Single</option>
+                    <option value="3">None</option>
+                </select>
             </div>
             <div class="col-md-4">
-                <h3>Found usernames</h3>
-                <ul id="user-list"></ul>
-            </div>
-        </div>
-        <div id="fact-list" class="row col-md-12">
-            <table id="fact-table" class="table table-striped table-responsive table-bordered table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>Class</th>
-                        <th>Type</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody class="list">
-                    <!-- to be filled in by list.js -->
-                </tbody>
-            </table>
-        </div>
-        <div id="cve-list" class="col-md-12">
-            <div clas="col-md-12">
-                <div class=col-md-8>
-                    <label for="selectA">Availability: </label>
-                    <select id="selectA">
-                        <option value="0">Clear</option>
-                        <option value="1">None</option>
-                        <option value="2">Partial</option>
-                        <option value="3">Complete</option>
-                    </select>
-                    <label for="selectC">Confidentiality: </label>
-                    <select id="selectC">
-                        <option value="0">Clear</option>
-                        <option value="1">None</option>
-                        <option value="2">Partial</option>
-                        <option value="3">Complete</option>
-                    </select>
-                    <label for="selectI">Integrity: </label>
-                    <select id="selectI">
-                        <option value="0">Clear</option>
-                        <option value="1">None</option>
-                        <option value="2">Partial</option>
-                        <option value="3">Complete</option>
-                    </select>
-                    <label for="selectV">Vector: </label>
-                    <select id="selectV">
-                        <option value="0">Clear</option>
-                        <option value="1">Local</option>
-                        <option value="2">Adjacent</option>
-                        <option value="3">Network</option>
-                    </select>
-                    <label for="selectCo">Complexity: </label>
-                    <select id="selectCo">
-                        <option value="0">Clear</option>
-                        <option value="1">High</option>
-                        <option value="2">Medium</option>
-                        <option value="3">Low</option>
-                    </select>
-                    <label for="selectAu">Authentication: </label>
-                    <select id="selectAu">
-                        <option value="0">Clear</option>
-                        <option value="1">Multiple</option>
-                        <option value="2">Single</option>
-                        <option value="3">None</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control" placeholder="Search" id="cve-search-text">
-                        <script>
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control" placeholder="Search"
+                           id="cve-search-text">
+                    <script>
                             $(document).ready(function() {
                                 $('#cve-search-button').click(function() {
                                     filterCvesByTerm(document.getElementById('cve-search-text').value);
                                 });
                             });
-                        </script>
-                        <!--<input type="button" id="cve-search-button">-->
+
+                    </script>
+                    <!--<input type="button" id="cve-search-button">-->
                         <span class="input-group-addon">
                         <button type="submit" id="cve-search-button">
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
                         </span>
-                        </input>
-                    </div>
+                    </input>
                 </div>
             </div>
-            <br/>
-            <table id="cve-table" class="table table-striped table-responsive table-bordered table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>CVE-ID</th>
-                        <th>Summary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
         </div>
+        <br/>
+        <table id="cve-table"
+               class="table table-striped table-responsive table-bordered table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>CVE-ID</th>
+                <th>Summary</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
-    <script>
+</div>
+<script>
         var dropdowns = [{
             ui: 'selectA',
             cve1: "impact",
@@ -366,7 +379,8 @@
                 .attr("transform", "translate(0," + height + ")")
                 .call(xAxis);
         }
-    </script>
+
+</script>
 </body>
 
 </html>

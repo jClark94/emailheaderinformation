@@ -9,22 +9,22 @@ public class AccessBuilder {
   private Complexity complexity;
   private Vector vector;
 
-  public AccessBuilder setVector(Vector vector) {
+  public AccessBuilder setVector (Vector vector) {
     this.vector = vector;
     return this;
   }
 
-  public AccessBuilder setComplexity(Complexity complexity) {
+  public AccessBuilder setComplexity (Complexity complexity) {
     this.complexity = complexity;
     return this;
   }
 
-  public AccessBuilder setAuthentication(Authentication authentication) {
+  public AccessBuilder setAuthentication (Authentication authentication) {
     this.authentication = authentication;
     return this;
   }
 
-  public Access createAccess() {
+  public Access createAccess () {
     return new Access(vector, complexity, authentication);
   }
 }

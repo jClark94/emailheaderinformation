@@ -12,8 +12,7 @@ public class OxfordHeaderAnalyser extends HeaderAnalyser {
   @Override public Object call () {
     if (mHeader.getFields().containsKey("X-Oxford-Username")) {
       Object[] arr = {
-          "Oxford", "Username", "Yes", mHeader.getFields().get("X-Oxford-Username")
-      };
+          "Oxford", "Username", "Yes", mHeader.getFields().get("X-Oxford-Username") };
       mMainWindow.addToTable(arr);
       mMainWindow.getFoundInformation().addUsername("Oxford",
                                                     mHeader.getFields().get("X-Oxford-Username"));
