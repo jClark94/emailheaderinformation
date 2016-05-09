@@ -27,7 +27,7 @@ public class ClientInferrer extends HeaderAnalyser {
     Collections.addAll(outlookAppleKeywords, kws);
   }
 
-  public void run () {
+  private void run () {
     String product = null;
     String hint = null;
     String lookup = null;
@@ -64,5 +64,10 @@ public class ClientInferrer extends HeaderAnalyser {
       mMainWindow.getVfm().lookupVulnerabilityForKeyword(lookup);
       mMainWindow.getFoundInformation().setSoftware(product);
     }
+  }
+
+  @Override public Object call () throws Exception {
+    run();
+    return null;
   }
 }

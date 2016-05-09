@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import static java.util.concurrent.Executors.*;
 
 public class MainWindow {
 
@@ -30,6 +33,12 @@ public class MainWindow {
   private MainWindow mSelf = this;
   private JTable mFoundInformationTable;
   private FoundInformation foundInformation = new FoundInformation();
+  private ExecutorService mExecutorService = newFixedThreadPool(8);
+
+  public Future submitToExecutorService (Callable task) {
+    return mExecutorService.submit(task);
+  }
+
 
   /**
    * Create the application.
@@ -88,13 +97,12 @@ public class MainWindow {
       HeaderAnalyser ci = new ClientInferrer(header, mSelf);
       HeaderAnalyser si = new SenderInformationExtractor(header, mSelf);
       Collection<Callable<Object>> has = new ArrayList<>();
-      has.add(Executors.callable(oha));
-      has.add(Executors.callable(eha));
-      has.add(Executors.callable(ci));
-      has.add(Executors.callable(si));
-      ExecutorService executor = Executors.newFixedThreadPool(8);
+      has.add(oha);
+      has.add(eha);
+      has.add(ci);
+      has.add(si);
       try {
-        executor.invokeAll(has);
+        mExecutorService.invokeAll(has);
       } catch (InterruptedException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();
@@ -110,8 +118,13 @@ public class MainWindow {
       if (vfm.noVulnerabilitiesFound()) {
         JOptionPane.showMessageDialog(mFrame, "No vulnerabilities found (yet!)");
       } else {
-        File file = new File("/home/jaclark/workspace/emailheaderinformation/src/main" +
-                             "/resources/result-template.html");
+        File file = null;
+        try {
+          file = new File(this.getClass().getResource("/result-template.html").toURI());
+        } catch (URISyntaxException e) {
+          e.printStackTrace();
+        }
+        assert file != null;
         try (InputStream in = new FileInputStream(file)) {
           InputStreamReader isr = new InputStreamReader(in);
           BufferedReader br = new BufferedReader(isr);
