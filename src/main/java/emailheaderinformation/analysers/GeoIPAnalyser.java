@@ -24,8 +24,8 @@ public class GeoIPAnalyser extends HeaderAnalyser<String> {
     try (DatabaseReader dbr = builder.build()) {
       CityResponse city = dbr.city(InetAddress.getByName(mAddress));
       return String.format("%s,%s",
-                           city.getLocation().getLongitude(),
-                           city.getLocation().getLatitude());
+                           city.getLocation().getLatitude(),
+                           city.getLocation().getLongitude());
     } catch (Exception ignored) {
       ignored.printStackTrace();
     }
