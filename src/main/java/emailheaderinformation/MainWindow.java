@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -91,11 +92,12 @@ public class MainWindow {
       HeaderAnalyser eha = new ExchangeHeaderAnalyser(header, mSelf);
       HeaderAnalyser ci = new ClientInferrer(header, mSelf);
       HeaderAnalyser si = new SenderInformationExtractor(header, mSelf);
+      HeaderAnalyser da = new DeviceAnalyser(header, mSelf);
+      Callable[] headerAnalysers = new Callable[] { oha, eha, ci, si, da };
       Collection<Callable<Object>> has = new ArrayList<>();
-      has.add(oha);
-      has.add(eha);
-      has.add(ci);
-      has.add(si);
+      for (Callable callable : headerAnalysers) {
+        has.add(callable);
+      }
       try {
         mExecutorService.invokeAll(has);
       } catch (InterruptedException e1) {
