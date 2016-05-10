@@ -5,8 +5,6 @@ import emailheaderinformation.model.Device;
 import emailheaderinformation.model.DeviceBuilder;
 import emailheaderinformation.model.Header;
 
-import javax.mail.internet.HeaderTokenizer;
-import javax.mail.internet.ParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,10 +26,10 @@ public class EmailParser {
     }
   }
 
-  public static Header parseHeader (String headerText) {
+/*  public static Header parseHeader (String headerText) {
     Header header = new Header();
     headerText = headerText.replaceAll("\\t", " ");
-    headerText = headerText.replaceAll("\\n        ", " ");
+    headerText = headerText.replaceAll("\\n ", " ");
     StringBuilder stringBuilder = new StringBuilder(headerText);
     for (int i = 0; i < headerText.length() - 1; i++) {
       if (headerText.charAt(i) == '\n' && headerText.charAt(i + 1) == ' ') {
@@ -43,7 +41,7 @@ public class EmailParser {
                                                           HeaderTokenizer.MIME);
 
     return createDeviceChain(header, headerTokenizer);
-  }
+  }*/
 
   /**
    * @param header
@@ -51,13 +49,12 @@ public class EmailParser {
    *
    * @return
    *
-   * @throws ParseException
    */
-  private static Header createDeviceChain (Header header, HeaderTokenizer headerTokenizer) {
+  private static Header createDeviceChain (Header header, StringChunker headerTokenizer) {
     try {
       Device lastDevice = null;
       Device firstDevice = null;
-      while (headerTokenizer.peek().getValue().equals("Received")) {
+      while (headerTokenizer.peek().equals("Received:")) {
         Device device = constructDevice(headerTokenizer);
         if (firstDevice == null) {
           firstDevice = device;
@@ -70,11 +67,13 @@ public class EmailParser {
       header.setStartDevice(firstDevice);
 
       return header;
-    } catch (java.text.ParseException | ParseException e) {
+    } catch (java.text.ParseException e) {
       // gotta catch em all and then ignore them
+      e.printStackTrace();
       return null;
     } catch (NullPointerException e) {
       // we've reached the end of the text to parse
+      e.printStackTrace();
       return header;
     }
   }
@@ -128,40 +127,47 @@ public class EmailParser {
    *
    * @return a @Device object containing all the necessary information
    */
-  private static Device constructDevice (HeaderTokenizer headerTokenizer)
-      throws ParseException, java.text.ParseException {
+  private static Device constructDevice (StringChunker headerTokenizer)
+      throws java.text.ParseException {
     DeviceBuilder builder = new DeviceBuilder();
 
     // Received:
-    headerTokenizer.next().getValue();
-    headerTokenizer.next().getValue();
-    String peeked = headerTokenizer.peek().getValue();
+    String peeked = headerTokenizer.next();
     boolean finished = false;
     while (!finished) {
-      if ("from".equals(peeked)) {
-        headerTokenizer.next();
-        String[] origin = extractUntilKeyword(headerTokenizer);
-        builder.setOrigin(origin[0]);
-        peeked = origin[1];
-      } else if ("by".equals(peeked)) {
-        headerTokenizer.next();
-        String[] name = extractUntilKeyword(headerTokenizer);
-        builder.setName(name[0]);
-        peeked = name[1];
-      } else if ("id".equals(peeked) || "for".equals(peeked) || "via".equals(peeked)) {
-        peeked = extractUntilKeyword(headerTokenizer)[1];
-      } else if ("with".equals(peeked)) {
-        headerTokenizer.next();
-        String[] software = extractUntilKeyword(headerTokenizer);
-        builder.setSoftware(software[0]);
-        peeked = software[1];
-        println(peeked);
-      } else if (";".equals(peeked)) {
-        finished = true;
-        // println(headerTokenizer.getRemainder());
-      } else {
-        println(peeked);
-        peeked = headerTokenizer.peek().getValue();
+      switch (peeked) {
+        case "from":
+          headerTokenizer.next();
+          String[] origin = extractUntilKeyword(headerTokenizer);
+          builder.setOrigin(origin[0]);
+          peeked = origin[1];
+          break;
+        case "by":
+          headerTokenizer.next();
+          String[] name = extractUntilKeyword(headerTokenizer);
+          builder.setName(name[0]);
+          peeked = name[1];
+          break;
+        case "id":
+        case "for":
+        case "via":
+          peeked = extractUntilKeyword(headerTokenizer)[1];
+          break;
+        case "with":
+          headerTokenizer.next();
+          String[] software = extractUntilKeyword(headerTokenizer);
+          builder.setSoftware(software[0]);
+          peeked = software[1];
+          println(peeked);
+          break;
+        case ";":
+          finished = true;
+          // println(headerTokenizer.getRemainder());
+          break;
+        default:
+          println(peeked);
+          peeked = headerTokenizer.peek();
+          break;
       }
     }
 
@@ -169,11 +175,11 @@ public class EmailParser {
     StringBuilder dateStrB = new StringBuilder("");
     while (date == null) {
       println(dateStrB.toString());
-      HeaderTokenizer.Token token = headerTokenizer.next();
-      dateStrB.append(token.getValue());
+      String token = headerTokenizer.next();
+      dateStrB.append(token);
       if (dateStrB.charAt(0) == ';') {
         dateStrB.deleteCharAt(0);
-        if (dateStrB.toString() != null && !dateStrB.toString().isEmpty()) {
+        if (!dateStrB.toString().isEmpty()) {
           while (Character.isWhitespace(dateStrB.charAt(0))) {
             dateStrB.deleteCharAt(0);
           }
@@ -188,14 +194,14 @@ public class EmailParser {
     return builder.createDevice();
   }
 
-  private static String[] extractUntilKeyword (HeaderTokenizer headerTokenizer)
-      throws ParseException {
+  private static String[] extractUntilKeyword (StringChunker headerTokenizer) {
     String token = "";
     String lastSeen;
-    lastSeen = headerTokenizer.peek().getValue();
+    lastSeen = headerTokenizer.next();
+    token += lastSeen;
     while (!keywords.contains(lastSeen)) {
-      token += " " + headerTokenizer.next().getValue();
-      lastSeen = headerTokenizer.peek().getValue();
+      token += " " + headerTokenizer.next();
+      lastSeen = headerTokenizer.peek();
     }
     println(token);
     println(lastSeen);
@@ -213,7 +219,7 @@ public class EmailParser {
 
   public Header parse (String inputEmail) {
     try {
-      ArrayList<String> command = new ArrayList<String>();
+      ArrayList<String> command = new ArrayList<>();
       command.add("python2");
       command.add("HeaderParserTrace.py");
       command.add(inputEmail);
@@ -222,15 +228,17 @@ public class EmailParser {
       if (result == 0) {
         StringBuilder output = commandExecutor.getStandardOutputFromCommand();
         Header header = new Header();
-        HeaderTokenizer ht = new HeaderTokenizer(output.toString(), HeaderTokenizer.MIME);
-        header = createDeviceChain(header, ht);
+        StringChunker sc = new StringChunker(output.toString());
+        header = createDeviceChain(header, sc);
         command.set(1, "HeaderParserFields.py");
         SystemCommandExecutor commandExecutor1 = new SystemCommandExecutor(command);
         if (commandExecutor1.executeCommand() == 0) {
           StringBuilder fields = commandExecutor1.getStandardOutputFromCommand();
           String[] keyval = fields.toString().split("\n");
           for (int i = 0; i < keyval.length - 1; i += 2) {
-            header.getFields().put(println(keyval[i]), println(keyval[i + 1]));
+            if (header != null) {
+              header.getFields().put(println(keyval[i]), println(keyval[i + 1]));
+            }
           }
           return header;
         } else {
