@@ -11,6 +11,7 @@ public class Device {
   private float longitude;
   private Device next;
   private boolean setNext = false;
+  private String owningOrganisation;
 
   public Device (Device next, String name, String software, Date receivedTime, String origin) {
     this.name = name;
@@ -60,5 +61,13 @@ public class Device {
 
   public String getOrigin () {
     return origin;
+  }
+
+  public String getOwningOrganisation () {
+    return owningOrganisation;
+  }
+
+  public void setOwningOrganisation (String owningOrganisation) {
+    this.owningOrganisation = owningOrganisation;
   }
 }
