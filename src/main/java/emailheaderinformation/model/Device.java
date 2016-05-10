@@ -7,6 +7,8 @@ public class Device {
   private final String software;
   private final Date receivedTime;
   private final String origin;
+  private float latitude;
+  private float longitude;
   private Device next;
   private boolean setNext = false;
 
@@ -15,6 +17,22 @@ public class Device {
     this.software = software;
     this.receivedTime = receivedTime;
     this.origin = origin;
+  }
+
+  public float getLongitude () {
+    return longitude;
+  }
+
+  public void setLongitude (float longitude) {
+    this.longitude = longitude;
+  }
+
+  public float getLatitude () {
+    return latitude;
+  }
+
+  public void setLatitude (float latitude) {
+    this.latitude = latitude;
   }
 
   public Device getNext () {
