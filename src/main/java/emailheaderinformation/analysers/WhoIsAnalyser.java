@@ -4,23 +4,17 @@ import emailheaderinformation.MainWindow;
 import emailheaderinformation.model.Header;
 import uk.bl.wa.whois.JRubyWhois;
 
-/**
- * Created by jaclark on 03/05/16.
- */
 public class WhoIsAnalyser extends HeaderAnalyser {
 
-  public WhoIsAnalyser (Header header, MainWindow main) {
+  private final String lookup;
+
+  public WhoIsAnalyser (Header header, MainWindow main, String lookup) {
     super(header, main);
-  }
-
-  public void addAndRun (String domain) {
-
+    this.lookup = lookup;
   }
 
   @Override public String call () {
     JRubyWhois jRubyWhoIs = new JRubyWhois();
-    System.out.println(jRubyWhoIs.lookup("google.com").getAdminContacts().get(0).getOrganization());
-
-    return "thing to return with whois information";
+    return jRubyWhoIs.lookup(lookup).getAdminContacts().get(0).getOrganization();
   }
 }
