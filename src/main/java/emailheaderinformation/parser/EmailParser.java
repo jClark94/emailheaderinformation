@@ -44,8 +44,8 @@ public class EmailParser {
   }*/
 
   /**
-   * @param header
-   * @param headerTokenizer
+   * @param header - the header model object to populate
+   * @param headerTokenizer - the header entry reader
    *
    * @return
    *
@@ -54,7 +54,7 @@ public class EmailParser {
     try {
       Device lastDevice = null;
       Device firstDevice = null;
-      while (headerTokenizer.peek().equals("Received:")) {
+      while (headerTokenizer.hasNext() && headerTokenizer.peek().equals("Received:")) {
         Device device = constructDevice(headerTokenizer);
         if (firstDevice == null) {
           firstDevice = device;
@@ -151,6 +151,7 @@ public class EmailParser {
         case "id":
         case "for":
         case "via":
+          headerTokenizer.next();
           peeked = extractUntilKeyword(headerTokenizer)[1];
           break;
         case "with":
@@ -160,13 +161,13 @@ public class EmailParser {
           peeked = software[1];
           println(peeked);
           break;
-        case ";":
-          finished = true;
-          // println(headerTokenizer.getRemainder());
-          break;
         default:
-          println(peeked);
-          peeked = headerTokenizer.peek();
+          if (peeked.endsWith(";")) {
+            finished = true;
+            headerTokenizer.next();
+          } else {
+            peeked = headerTokenizer.peek();
+          }
           break;
       }
     }
@@ -174,7 +175,6 @@ public class EmailParser {
     Date date = null;
     StringBuilder dateStrB = new StringBuilder("");
     while (date == null) {
-      println(dateStrB.toString());
       String token = headerTokenizer.next();
       dateStrB.append(token);
       if (dateStrB.charAt(0) == ';') {
@@ -197,14 +197,11 @@ public class EmailParser {
   private static String[] extractUntilKeyword (StringChunker headerTokenizer) {
     String token = "";
     String lastSeen;
-    lastSeen = headerTokenizer.next();
-    token += lastSeen;
-    while (!keywords.contains(lastSeen)) {
+    lastSeen = headerTokenizer.peek();
+    while (headerTokenizer.hasNext() && !(keywords.contains(lastSeen) || lastSeen.endsWith(";"))) {
       token += " " + headerTokenizer.next();
       lastSeen = headerTokenizer.peek();
     }
-    println(token);
-    println(lastSeen);
     String[] ret = {
         token, lastSeen };
     return ret;
