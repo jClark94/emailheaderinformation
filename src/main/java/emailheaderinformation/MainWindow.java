@@ -5,6 +5,7 @@ import emailheaderinformation.analysers.*;
 import emailheaderinformation.model.FoundInformation;
 import emailheaderinformation.model.Header;
 import emailheaderinformation.parser.EmailParser;
+import emailheaderinformation.WebServer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -171,6 +172,7 @@ public class MainWindow {
           });
           Path out = Paths.get("/tmp/webpage.html");
           Files.write(out, webPage.toString().getBytes());
+          WebServer webServer = new WebServer(mFrame, webPage.toString(), 3142);
         } catch (IOException e) {
           e.printStackTrace();
         }
