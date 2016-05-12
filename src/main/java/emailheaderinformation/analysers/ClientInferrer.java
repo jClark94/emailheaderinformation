@@ -36,8 +36,13 @@ public class ClientInferrer extends HeaderAnalyser {
     String product = null;
     String hint = null;
     String lookup = null;
-    // Presence of User-Agent string implies Thunderbird
-    if (mHeader.getFields().containsKey("User-Agent")) {
+    String messageId = mHeader.getFields().get("Message-ID");
+    if (messageId != null && !messageId.isEmpty() && messageId.contains("email.android.com")) {
+      product = "Android E-Mail";
+      hint = "Message-ID";
+      lookup = "android";
+    } else if (mHeader.getFields().containsKey("User-Agent")) {
+      // Presence of User-Agent string implies Thunderbird
       product = "Thunderbird";
       hint = "User-Agent";
       lookup = "thunderbird";
