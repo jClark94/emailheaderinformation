@@ -41,6 +41,11 @@ public class ClientInferrer extends HeaderAnalyser {
       product = "Android E-Mail";
       hint = "Message-ID";
       lookup = "android";
+    } else if (mHeader.getFields().containsKey("X-Mailer") &&
+               mHeader.getFields().get("X-Mailer").contains("iPhone")) {
+      product = "Apple iOS Mail";
+      hint = "X-Mailer";
+      lookup = "apple:iphone";
     } else if (mHeader.getFields().containsKey("User-Agent")) {
       // Presence of User-Agent string implies Thunderbird
       product = "Thunderbird";
