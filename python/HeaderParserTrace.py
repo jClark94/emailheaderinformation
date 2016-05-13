@@ -24,4 +24,4 @@ for arg in sys.argv:
 headers = Parser().parsestr(header, True)
     
 for output in headers.get_all('Received') :
-    print 'Received: ' + re.sub(r"\n\t? *",  ' ', output, 0)
+    print 'Received: ' + re.sub(r"\s+",  ' ', output, 0)

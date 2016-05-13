@@ -50,12 +50,12 @@ public class EmailParser {
    * @return
    *
    */
-  private static Header createDeviceChain (Header header, StringChunker headerTokenizer) {
+  private static Header createDeviceChain (Header header, String output) {
     try {
       Device lastDevice = null;
       Device firstDevice = null;
-      while (headerTokenizer.hasNext() && headerTokenizer.peek().equals("Received:")) {
-        Device device = constructDevice(headerTokenizer);
+      for (String line : output.split("\\n")) {
+        Device device = constructDevice(new StringChunker(line));
         if (firstDevice == null) {
           firstDevice = device;
         }
@@ -65,12 +65,7 @@ public class EmailParser {
         lastDevice = device;
       }
       header.setStartDevice(firstDevice);
-
       return header;
-    } catch (java.text.ParseException e) {
-      // gotta catch em all and then ignore them
-      e.printStackTrace();
-      return null;
     } catch (NullPointerException e) {
       // we've reached the end of the text to parse
       e.printStackTrace();
@@ -127,8 +122,7 @@ public class EmailParser {
    *
    * @return a @Device object containing all the necessary information
    */
-  private static Device constructDevice (StringChunker headerTokenizer)
-      throws java.text.ParseException {
+  private static Device constructDevice (StringChunker headerTokenizer) {
     DeviceBuilder builder = new DeviceBuilder();
 
     // Received:
@@ -159,7 +153,6 @@ public class EmailParser {
           String[] software = extractUntilKeyword(headerTokenizer);
           builder.setSoftware(software[0]);
           peeked = software[1];
-          println(peeked);
           break;
         default:
           if (peeked.endsWith(";")) {
@@ -207,13 +200,6 @@ public class EmailParser {
     return ret;
   }
 
-  private static String println (String value) {
-    if (value != null) {
-      System.out.println(value);
-    }
-    return value;
-  }
-
   public Header parse (String inputEmail) {
     try {
       ArrayList<String> command = new ArrayList<>();
@@ -225,8 +211,7 @@ public class EmailParser {
       if (result == 0) {
         StringBuilder output = commandExecutor.getStandardOutputFromCommand();
         Header header = new Header();
-        StringChunker sc = new StringChunker(output.toString());
-        header = createDeviceChain(header, sc);
+        header = createDeviceChain(header, output.toString());
         command.set(1, "HeaderParserFields.py");
         SystemCommandExecutor commandExecutor1 = new SystemCommandExecutor(command);
         if (commandExecutor1.executeCommand() == 0) {
@@ -234,16 +219,16 @@ public class EmailParser {
           String[] keyval = fields.toString().split("\n");
           for (int i = 0; i < keyval.length - 1; i += 2) {
             if (header != null) {
-              header.getFields().put(println(keyval[i]), println(keyval[i + 1]));
+              header.getFields().put(keyval[i], keyval[i + 1]);
             }
           }
           return header;
         } else {
-          println(commandExecutor.getStandardErrorFromCommand().toString());
+          System.err.println(commandExecutor.getStandardErrorFromCommand().toString());
           return null;
         }
       } else {
-        println(commandExecutor.getStandardErrorFromCommand().toString());
+        System.err.println(commandExecutor.getStandardErrorFromCommand().toString());
         return null;
       }
     } catch (IOException | InterruptedException e) {

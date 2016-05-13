@@ -5,7 +5,6 @@ import emailheaderinformation.analysers.*;
 import emailheaderinformation.model.FoundInformation;
 import emailheaderinformation.model.Header;
 import emailheaderinformation.parser.EmailParser;
-import emailheaderinformation.WebServer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -36,13 +34,14 @@ public class MainWindow {
   private JTable mFoundInformationTable;
   private FoundInformation foundInformation = new FoundInformation();
   private ExecutorService mExecutorService = newFixedThreadPool(8);
+  private WebServer mWebServer;
 
   /**
    * Create the application.
    */
   public MainWindow () {
     initialize();
-    vfm = new VulnerabilityFinderManager(this);
+    vfm = new VulnerabilityFinderManagerImpl(this);
   }
 
   /**
@@ -116,68 +115,70 @@ public class MainWindow {
       if (vfm.noVulnerabilitiesFound()) {
         JOptionPane.showMessageDialog(mFrame, "No vulnerabilities found (yet!)");
       } else {
-        File file = null;
         try {
-          file = new File(this.getClass().getResource("/result-template.html").toURI());
+          File file = new File(this.getClass().getResource("/result-template.html").toURI());
+          try (InputStream in = new FileInputStream(file);
+               InputStreamReader isr = new InputStreamReader(in);
+               BufferedReader br = new BufferedReader(isr)) {
+            StringBuilder webPage = new StringBuilder();
+            br.lines().forEach((String s) -> {
+              Gson gson = new Gson();
+              if (s.contains("${name}")) {
+                webPage.append(s.replace("${name}", foundInformation.getName()));
+              } else if (s.contains("var cveentries = [];")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append('[');
+                vfm.getVulnerabilities().forEach(vd -> {
+                  sb.append(gson.toJson(vd));
+                  sb.append(',');
+                  sb.append(System.lineSeparator());
+                });
+                sb.append(']');
+                webPage.append(s.replace("[]", sb.toString()));
+              } else if (s.contains("var factentries = [];")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append('[');
+                foundInformation.getFacts().forEach(f -> {
+                  sb.append(gson.toJson(f));
+                  sb.append(',');
+                  sb.append(System.lineSeparator());
+                });
+                sb.append(']');
+                webPage.append(s.replace("[]", sb.toString()));
+              } else if (s.contains("var userentries = [];")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append('[');
+                foundInformation.getUsernameList().forEach(u -> {
+                  sb.append(gson.toJson(u));
+                  sb.append(',');
+                  sb.append(System.lineSeparator());
+                });
+                sb.append(']');
+                webPage.append(s.replace("[]", sb.toString()));
+              } else if (s.contains("${software}")) {
+                webPage.append(s.replace("${software}", foundInformation.getSoftware()));
+              } else if (s.contains("var products = [];")) {
+                webPage.append(s.replace("[]", gson.toJson(vfm.getKeywords())));
+              } else if (s.contains("var servers = [];")) {
+                webPage.append(s.replace("[]", gson.toJson(foundInformation.getDevices())));
+              } else {
+                webPage.append(s);
+              }
+              webPage.append(System.lineSeparator());
+            });
+            Path out = Paths.get("/tmp/webpage.html");
+            Files.write(out, webPage.toString().getBytes());
+            if (mWebServer != null) {
+              mWebServer.stop();
+            }
+            mWebServer = new WebServer(mFrame, webPage.toString(), 3142);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
         } catch (URISyntaxException e) {
           e.printStackTrace();
         }
-        assert file != null;
-        try (InputStream in = new FileInputStream(file)) {
-          InputStreamReader isr = new InputStreamReader(in);
-          BufferedReader br = new BufferedReader(isr);
-          StringBuilder webPage = new StringBuilder();
-          br.lines().forEach((String s) -> {
-            Gson gson = new Gson();
-            if (s.contains("${name}")) {
-              webPage.append(s.replace("${name}", foundInformation.getName()));
-            } else if (s.contains("${cveentries}")) {
-              StringBuilder sb = new StringBuilder();
-              sb.append('[');
-              vfm.getVulnerabilities().forEach(vd -> {
-                sb.append(gson.toJson(vd));
-                sb.append(',');
-                sb.append(System.lineSeparator());
-              });
-              sb.append(']');
-              webPage.append(s.replace("${cveentries}", sb.toString()));
-            } else if (s.contains("${factentries}")) {
-              StringBuilder sb = new StringBuilder();
-              sb.append('[');
-              foundInformation.getFacts().forEach(f -> {
-                sb.append(gson.toJson(f));
-                sb.append(',');
-                sb.append(System.lineSeparator());
-              });
-              sb.append(']');
-              webPage.append(s.replace("${factentries}", sb.toString()));
-            } else if (s.contains("${usernames}")) {
-              StringBuilder sb = new StringBuilder();
-              sb.append('[');
-              foundInformation.getUsernameList().forEach(u -> {
-                sb.append(gson.toJson(u));
-                sb.append(',');
-                sb.append(System.lineSeparator());
-              });
-              sb.append(']');
-              webPage.append(s.replace("${usernames}", sb.toString()));
-            } else if (s.contains("${software}")) {
-              webPage.append(s.replace("${software}", foundInformation.getSoftware()));
-            } else if (s.contains("${products}")) {
-              webPage.append(s.replace("${products}", gson.toJson(vfm.getKeywords())));
-            } else {
-              webPage.append(s);
-            }
-            webPage.append(System.lineSeparator());
-          });
-          Path out = Paths.get("/tmp/webpage.html");
-          Files.write(out, webPage.toString().getBytes());
-          WebServer webServer = new WebServer(mFrame, webPage.toString(), 3142);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    });
+      }});
 
     inputFrame.add(mOpen);
     inputFrame.add(mStart);
