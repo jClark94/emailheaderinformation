@@ -50,6 +50,43 @@
             stroke-opacity: .5;
         }
 
+
+.stroke {
+  fill: none;
+  stroke: #000;
+  stroke-width: 3px;
+}
+
+.fill {
+  fill: #fff;
+}
+
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+
+.points circle {
+  fill: #fff;
+  stroke: red;
+  stroke-width: 2px;
+}
+
+.points text {
+  font: 11px sans-serif;
+  text-anchor: middle;
+  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+}
+
+.route {
+  fill: none;
+  stroke: red;
+  stroke-width: 3px;
+}
+
+
         .land {
             fill: #222;
         }
@@ -408,10 +445,57 @@
             .attr("width", width)
             .attr("height", height);
 
-        svg.append("path")
-            .datum(graticule)
-            .attr("class", "graticule")
-            .attr("d", path);
+            var places = [];
+            var positions = [];
+
+            for (var i = 0; i < servers.length; i++) {
+                var lat = servers[i].lat;
+                var lon = servers[i].lon;
+                places[i] = [lat, lon];
+                positions[i] = [lat, lon];
+            }
+
+            var links = {type: "LineString", coordinates: positions };
+
+
+svg.append("defs").append("path")
+    .datum({type: "Sphere"})
+    .attr("id", "sphere")
+    .attr("d", path);
+
+svg.append("use")
+    .attr("class", "stroke")
+    .attr("xlink:href", "#sphere");
+
+svg.append("use")
+    .attr("class", "fill")
+    .attr("xlink:href", "#sphere");
+
+svg.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
+
+svg.append("path")
+    .datum(links)
+    .attr("class", "route")
+    .attr("d", path);
+
+var point = svg.append("g")
+    .attr("class", "points")
+  .selectAll("g")
+    .data(d3.entries(places))
+  .enter().append("g")
+    .attr("transform", function(d) { return "translate(" + projection(d.value) + ")"; });
+
+point.append("circle")
+    .attr("r", 4.5);
+
+point.append("text")
+    .attr("y", 10)
+    .attr("dy", ".71em")
+    .text(function(d) { return d.key; });
+
 
         d3.json("./world-50m.json", function(error, world) {
             if (error) throw error;
@@ -427,20 +511,6 @@
                 }))
                 .attr("class", "boundary")
                 .attr("d", path);
-
-            svg.selectAll("circle")
-                .data(servers)
-                .enter()
-                .append("circle")
-                .attr("cx", function(d) {
-                    return projection([d.lon, d.lat])[0];
-                })
-                .attr("cy", function(d) {
-                    return projection([d.lon, d.lat])[1];
-                } )
-                .attr("r", 5)
-                .style("fill", "red");
-
         });
 
         d3.select(self.frameElement).style("height", height + "px");
