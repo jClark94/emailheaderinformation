@@ -32,14 +32,11 @@ public class DeviceAnalyser extends HeaderAnalyser {
       String ip = "";
       float lat = 0;
       float lon = 0;
-      System.out.printf("Device Analyser: %s\n", device.getName());
       Matcher matcher = pattern.matcher(device.getName());
       while (matcher.find() && lat == 0 && lon == 0) {
         String tempIp = matcher.group();
-        System.out.printf("IP Address: %s\n", tempIp);
         GeoIPAnalyser geoIPAnalyser = new GeoIPAnalyser(mHeader, mMainWindow, tempIp);
         String result = (String) mMainWindow.submitToExecutorService(geoIPAnalyser).get();
-        System.out.printf("Result: %s\n", result);
         // Allow for local IP addresses being found
         if (!NO_RESULT_FOUND.equals(result)) {
           ip = matcher.group();
@@ -47,7 +44,6 @@ public class DeviceAnalyser extends HeaderAnalyser {
           device.setLatitude(lat);
           lon = parseFloat(result.split(",")[1]);
           device.setLongitude(lon);
-          System.out.printf("%s: (%s, %s, %s)%n", device.getName(), ip, lat, lon);
         }
       }
 
@@ -60,15 +56,13 @@ public class DeviceAnalyser extends HeaderAnalyser {
           GeoIPAnalyser geoIPAnalyser = new GeoIPAnalyser(mHeader, mMainWindow,
                                                           inetAddress.getHostAddress());
           String result = (String) mMainWindow.submitToExecutorService(geoIPAnalyser).get();
-          System.out.printf("Result: %s\n", result);
           // Allow for local IP addresses being found
           if (!NO_RESULT_FOUND.equals(result)) {
-            ip = matcher.group();
+            ip = inetAddress.getHostAddress();
             lat = parseFloat(result.split(",")[0]);
             device.setLatitude(lat);
             lon = parseFloat(result.split(",")[1]);
             device.setLongitude(lon);
-            System.out.printf("%s: (%s, %s, %s)%n", device.getName(), ip, lat, lon);
           }
         }
       }
