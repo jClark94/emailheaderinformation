@@ -6,10 +6,7 @@ import emailheaderinformation.model.DeviceBuilder;
 import emailheaderinformation.model.Header;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class EmailParser {
   private static Set<String> keywords = new HashSet<String>();
@@ -18,12 +15,10 @@ public class EmailParser {
     setupParser();
   }
 
-  public static void setupParser () {
+  private static void setupParser() {
     String[] kws = {
         "Received", "from", "by", "via", "with", "id", "for", ";" };
-    for (String kw : kws) {
-      keywords.add(kw);
-    }
+    Collections.addAll(keywords, kws);
   }
 
 /*  public static Header parseHeader (String headerText) {
@@ -45,7 +40,7 @@ public class EmailParser {
 
   /**
    * @param header - the header model object to populate
-   * @param headerTokenizer - the header entry reader
+   * @param output - the header entry string
    *
    * @return
    *
