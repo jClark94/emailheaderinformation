@@ -145,7 +145,7 @@ public class MainWindow {
                 });
                 sb.append(']');
                 webPage.append(s.replace("[]", sb.toString()));
-              } else if (s.contains("var userentries = [];")) {
+              } else if (s.contains("var usernameEntries = [];")) {
                 StringBuilder sb = new StringBuilder();
                 sb.append('[');
                 foundInformation.getUsernameList().forEach(u -> {
@@ -178,7 +178,8 @@ public class MainWindow {
         } catch (URISyntaxException e) {
           e.printStackTrace();
         }
-      }});
+      }
+    });
 
     inputFrame.add(mOpen);
     inputFrame.add(mStart);
