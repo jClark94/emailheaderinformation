@@ -50,42 +50,33 @@
             stroke-opacity: .5;
         }
 
+        .stroke {
+            fill: none;
+            stroke: #000;
+            stroke-width: 3px;
+        }
 
-.stroke {
-  fill: none;
-  stroke: #000;
-  stroke-width: 3px;
-}
+        .fill {
+            fill: #fff;
+        }
 
-.fill {
-  fill: #fff;
-}
+        .points circle {
+            fill: #fff;
+            stroke: red;
+            stroke-width: 2px;
+        }
 
-.graticule {
-  fill: none;
-  stroke: #777;
-  stroke-width: .5px;
-  stroke-opacity: .5;
-}
+        .points text {
+            font: 11px sans-serif;
+            text-anchor: middle;
+            text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+        }
 
-.points circle {
-  fill: #fff;
-  stroke: red;
-  stroke-width: 2px;
-}
-
-.points text {
-  font: 11px sans-serif;
-  text-anchor: middle;
-  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
-}
-
-.route {
-  fill: none;
-  stroke: red;
-  stroke-width: 3px;
-}
-
+        .route {
+            fill: none;
+            stroke: red;
+            stroke-width: 3px;
+        }
 
         .land {
             fill: #222;
@@ -121,9 +112,9 @@
     <div class="container-fluid" id="main-div">
         <div class="row">
             <div class="col-md-12">
-                <h2>
+                <h1>
                 E-Mail Header Information Results
-            </h2>
+            </h1>
             </div>
         </div>
         <div class="row">
@@ -161,6 +152,13 @@
                     <!-- to be filled in by list.js -->
                 </tbody>
             </table>
+        </div>
+        <div id="hist-list" class="row col-md-12">
+          <div class="col-md-12">
+            <h2>
+              Distribution of CVE Scores by Product
+            </h2>
+          </div>
         </div>
         <div id="cve-list" class="col-md-12">
             <div clas="col-md-12">
@@ -347,7 +345,7 @@
 
             if (values[0] !== undefined) {
 
-                d3.select("#fact-list")
+                d3.select("#hist-list")
                     .append("div")
                     .attr("id", "div-" + prod.replace(/:/g, ""))
                     .attr("class", "col-md-6")
@@ -431,13 +429,11 @@
             width = $('#main-div').width() - margin.left - margin.right,
             height = $('#main-div').width() * 0.75 - margin.top - margin.bottom;
 
-        var projection = d3.geo.equirectangular()
-            .scale(153)
+        var projection = d3.geo.equirectangular();
+            /*.scale(0.25*Math.sqrt(width * width + height * height))
             .translate([width / 2, height / 2])
-            .precision(.1);
+            .precision(.1);*/
 
-        var path = d3.geo.path()
-            .projection(projection);
 
         var graticule = d3.geo.graticule();
 
@@ -445,57 +441,73 @@
             .attr("width", width)
             .attr("height", height);
 
-            var places = [];
-            var positions = [];
+        var positions = [];
+        var minLat = 1000;
+        var maxLat = -1000;
+        var minLon = 1000;
+        var maxLon = -1000;
 
-            for (var i = 0; i < servers.length; i++) {
-                var lat = servers[i].lat;
-                var lon = servers[i].lon;
-                places[i] = [lat, lon];
-                positions[i] = [lat, lon];
-            }
+        for (var i = 0; i < servers.length; i++) {
+            var lat = servers[i].lat;
+            var lon = servers[i].lon;
+            minLat = Math.min(lat, minLat);
+            maxLat = Math.max(lat, maxLat);
+            minLon = Math.min(lon, minLon);
+            maxLon = Math.max(lon, maxLon);
+            positions[i] = [lon, lat];
+        }
 
-            var links = {type: "LineString", coordinates: positions };
+        var path = d3.geo.path()
+            .projection(projection);
 
+        var route = {
+            type: "LineString",
+            coordinates: positions
+        };
 
-svg.append("defs").append("path")
-    .datum({type: "Sphere"})
-    .attr("id", "sphere")
-    .attr("d", path);
+        svg.append("defs").append("path")
+            .datum({
+                type: "Sphere"
+            })
+            .attr("id", "sphere")
+            .attr("d", path);
 
-svg.append("use")
-    .attr("class", "stroke")
-    .attr("xlink:href", "#sphere");
+        svg.append("use")
+            .attr("class", "stroke")
+            .attr("xlink:href", "#sphere");
 
-svg.append("use")
-    .attr("class", "fill")
-    .attr("xlink:href", "#sphere");
+        svg.append("use")
+            .attr("class", "fill")
+            .attr("xlink:href", "#sphere");
 
-svg.append("path")
-    .datum(graticule)
-    .attr("class", "graticule")
-    .attr("d", path);
+        svg.append("path")
+            .datum(graticule)
+            .attr("class", "graticule")
+            .attr("d", path);
 
-svg.append("path")
-    .datum(links)
-    .attr("class", "route")
-    .attr("d", path);
+        svg.append("path")
+            .datum(route)
+            .attr("class", "route")
+            .attr("d", path);
 
-var point = svg.append("g")
-    .attr("class", "points")
-  .selectAll("g")
-    .data(d3.entries(places))
-  .enter().append("g")
-    .attr("transform", function(d) { return "translate(" + projection(d.value) + ")"; });
+        var point = svg.append("g")
+            .attr("class", "points")
+            .selectAll("g")
+            .data(d3.entries(positions))
+            .enter().append("g")
+            .attr("transform", function(d) {
+                return "translate(" + projection(d.value) + ")";
+            });
 
-point.append("circle")
-    .attr("r", 4.5);
+        point.append("circle")
+            .attr("r", 4.5);
 
-point.append("text")
-    .attr("y", 10)
-    .attr("dy", ".71em")
-    .text(function(d) { return d.key; });
-
+        point.append("text")
+            .attr("y", 10)
+            .attr("dy", ".71em")
+            .text(function(d) {
+                return servers[d.key].ipAddress;
+            });
 
         d3.json("./world-50m.json", function(error, world) {
             if (error) throw error;
