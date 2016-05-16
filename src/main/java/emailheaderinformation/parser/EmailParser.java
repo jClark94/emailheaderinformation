@@ -15,35 +15,57 @@ public class EmailParser {
     setupParser();
   }
 
-  private static void setupParser() {
+  private static void setupParser () {
     String[] kws = {
         "Received", "from", "by", "via", "with", "id", "for", ";" };
     Collections.addAll(keywords, kws);
   }
 
-/*  public static Header parseHeader (String headerText) {
-    Header header = new Header();
-    headerText = headerText.replaceAll("\\t", " ");
-    headerText = headerText.replaceAll("\\n ", " ");
-    StringBuilder stringBuilder = new StringBuilder(headerText);
-    for (int i = 0; i < headerText.length() - 1; i++) {
-      if (headerText.charAt(i) == '\n' && headerText.charAt(i + 1) == ' ') {
-        stringBuilder.setCharAt(i, ' ');
+  public Header parse (String inputEmail) {
+    try {
+      ArrayList<String> command = new ArrayList<>();
+      command.add("python2");
+      command.add("HeaderParserTrace.py");
+      command.add(inputEmail);
+      SystemCommandExecutor commandExecutor = new SystemCommandExecutor(command);
+      int result = commandExecutor.executeCommand();
+      if (result == 0) {
+        StringBuilder output = commandExecutor.getStandardOutputFromCommand();
+        Header header = new Header();
+        header = createDeviceChain(header, output.toString());
+        command.set(1, "HeaderParserFields.py");
+        SystemCommandExecutor commandExecutor1 = new SystemCommandExecutor(command);
+        if (commandExecutor1.executeCommand() == 0) {
+          StringBuilder fields = commandExecutor1.getStandardOutputFromCommand();
+          String[] keyval = fields.toString().split("\n");
+          for (int i = 0; i < keyval.length - 1; i += 2) {
+            if (header != null) {
+              header.getFields().put(keyval[i], keyval[i + 1]);
+            }
+          }
+          return header;
+        } else {
+          System.err.println(commandExecutor.getStandardErrorFromCommand().toString());
+          return null;
+        }
+      } else {
+        System.err.println(commandExecutor.getStandardErrorFromCommand().toString());
+        return null;
       }
+    } catch (IOException | InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
-
-    HeaderTokenizer headerTokenizer = new HeaderTokenizer(stringBuilder.toString(),
-                                                          HeaderTokenizer.MIME);
-
-    return createDeviceChain(header, headerTokenizer);
-  }*/
+    return null;
+  }
 
   /**
-   * @param header - the header model object to populate
-   * @param output - the header entry string
+   * @param header
+   *     - the header model object to populate
+   * @param output
+   *     - the header entry string
    *
    * @return
-   *
    */
   private static Header createDeviceChain (Header header, String output) {
     try {
@@ -77,8 +99,7 @@ public class EmailParser {
    * with Microsoft SMTP Server id 14.3.169.1; Sat, 14 Nov 2015 10:55:35 +0000
    * <p>
    * received = "Received" ":" ; one per relay ["from" domain] ; sending host ["by" domain] ;
-   * receiving host ["via" atom] ; physical path *("with" atom) ; link/mail protocol ["id"
-   * msg-id] ;
+   * receiving host ["via" atom] ; physical path *("with" atom) ; link/mail protocol ["id" msg-id] ;
    * receiver msg id ["for" addr-spec] ; initial form ";" date-time ; time received
    * <p>
    * addr-spec = local-part "@" domain ; global address
@@ -97,8 +118,7 @@ public class EmailParser {
    * <p>
    * date = 1*2DIGIT month 2DIGIT ; day month year ; e.g. 20 Jun 82
    * <p>
-   * month = "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" / "Jul" / "Aug" / "Sep" / "Oct" /
-   * "Nov" /
+   * month = "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" / "Jul" / "Aug" / "Sep" / "Oct" / "Nov" /
    * "Dec"
    * <p>
    * time = hour zone ; ANSI and Military
@@ -190,46 +210,6 @@ public class EmailParser {
       token += " " + headerTokenizer.next();
       lastSeen = headerTokenizer.peek();
     }
-    String[] ret = {
-        token, lastSeen };
-    return ret;
-  }
-
-  public Header parse (String inputEmail) {
-    try {
-      ArrayList<String> command = new ArrayList<>();
-      command.add("python2");
-      command.add("HeaderParserTrace.py");
-      command.add(inputEmail);
-      SystemCommandExecutor commandExecutor = new SystemCommandExecutor(command);
-      int result = commandExecutor.executeCommand();
-      if (result == 0) {
-        StringBuilder output = commandExecutor.getStandardOutputFromCommand();
-        Header header = new Header();
-        header = createDeviceChain(header, output.toString());
-        command.set(1, "HeaderParserFields.py");
-        SystemCommandExecutor commandExecutor1 = new SystemCommandExecutor(command);
-        if (commandExecutor1.executeCommand() == 0) {
-          StringBuilder fields = commandExecutor1.getStandardOutputFromCommand();
-          String[] keyval = fields.toString().split("\n");
-          for (int i = 0; i < keyval.length - 1; i += 2) {
-            if (header != null) {
-              header.getFields().put(keyval[i], keyval[i + 1]);
-            }
-          }
-          return header;
-        } else {
-          System.err.println(commandExecutor.getStandardErrorFromCommand().toString());
-          return null;
-        }
-      } else {
-        System.err.println(commandExecutor.getStandardErrorFromCommand().toString());
-        return null;
-      }
-    } catch (IOException | InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return null;
+    return new String[] { token, lastSeen };
   }
 }
