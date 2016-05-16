@@ -7,12 +7,10 @@ import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import emailheaderinformation.MainWindow;
 import emailheaderinformation.model.Header;
-import org.apache.commons.lang3.SystemUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
 
 class GeoIPAnalyser extends HeaderAnalyser<String> {
 
@@ -28,7 +26,6 @@ class GeoIPAnalyser extends HeaderAnalyser<String> {
     Builder builder = new Builder(new File(GeoIPAnalyser.class.getResource("/GeoLite2-City.mmdb")
                                                .getFile()));
     try (DatabaseReader dbr = builder.build()) {
-      System.out.printf("Address: %s%n", mAddress);
       CityResponse city = dbr.city(InetAddress.getByName(mAddress));
       return String.format("%s,%s",
                            city.getLocation().getLatitude(),
