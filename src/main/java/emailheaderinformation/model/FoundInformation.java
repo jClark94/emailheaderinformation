@@ -48,8 +48,8 @@ public class FoundInformation {
     this.software = software;
   }
 
-  public void addDevice(String ip, float lat, float lon) {
-    DeviceInformation di = new DeviceInformation(deviceCount++, ip, lat, lon);
+  public void addDevice (String ip, float lat, float lon, String software) {
+    DeviceInformation di = new DeviceInformation(deviceCount++, ip, lat, lon, software);
     devices.add(di);
   }
 }
