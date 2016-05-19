@@ -182,7 +182,7 @@ public class EmailParser {
 
     Date date = null;
     StringBuilder dateStrB = new StringBuilder("");
-    while (date == null) {
+    while (date == null && headerTokenizer.hasNext()) {
       String token = headerTokenizer.next();
       dateStrB.append(token);
       if (dateStrB.charAt(0) == ';') {
@@ -208,7 +208,9 @@ public class EmailParser {
     lastSeen = headerTokenizer.peek();
     while (headerTokenizer.hasNext() && !(keywords.contains(lastSeen) || lastSeen.endsWith(";"))) {
       token += " " + headerTokenizer.next();
-      lastSeen = headerTokenizer.peek();
+      if (headerTokenizer.hasNext()) {
+        lastSeen = headerTokenizer.peek();
+      }
     }
     return new String[] { token, lastSeen };
   }

@@ -117,13 +117,14 @@
             </h1>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="sender-list">
             <div class="col-md-4">
                 <h3>
                 Sender Information
             </h3>
                 <p>
-                    <em>Name: </em>${name}
+                    <em>Name: </em>${name}<br/>
+                    <em>Organisation: </em>${org}
                 </p>
             </div>
             <div class="col-md-4">
@@ -437,7 +438,7 @@
 
         var graticule = d3.geo.graticule();
 
-        var svg = d3.select("#fact-list").append("svg")
+        var svg = d3.select("#sender-list").append("svg")
             .attr("width", width)
             .attr("height", height);
 

@@ -38,15 +38,15 @@ public class DeviceAnalyser extends HeaderAnalyser {
         e.printStackTrace();
       }
 
-      try {
-        extractInformation(device.getOrigin(), device);
-      } catch (InterruptedException | UnknownHostException e) {
-        e.printStackTrace();
-      }
-
       device = device.getNext();
     }
 
+    // Special case for the last device
+    try {
+      extractInformation(device.getOrigin(), device);
+    } catch (InterruptedException | UnknownHostException e) {
+      e.printStackTrace();
+    }
 
     return null;
   }
@@ -57,6 +57,7 @@ public class DeviceAnalyser extends HeaderAnalyser {
     String ip = "";
     float lat = 0;
     float lon = 0;
+    String owner = "";
     Matcher matcher = pattern.matcher(devName);
     while (matcher.find() && lat == 0 && lon == 0) {
       String tempIp = matcher.group();
@@ -73,27 +74,32 @@ public class DeviceAnalyser extends HeaderAnalyser {
     }
 
     // Coincidentally, just above the middle of the Atlantic.  No servers here
-    if (lat == 0 && lon == 0) {
+    try {
       Matcher hostMatcher = hostname.matcher(devName);
       if (hostMatcher.find()) {
         String host = hostMatcher.group(0);
-        InetAddress inetAddress = InetAddress.getByName(host);
-        GeoIPAnalyser geoIPAnalyser = new GeoIPAnalyser(mHeader,
-                                                        mMainWindow,
-                                                        inetAddress.getHostAddress());
-        String result = (String) mMainWindow.submitToExecutorService(geoIPAnalyser).get();
-        // Allow for local IP addresses being found
-        if (!NO_RESULT_FOUND.equals(result)) {
-          ip = inetAddress.getHostAddress();
-          lat = parseFloat(result.split(",")[0]);
-          device.setLatitude(lat);
-          lon = parseFloat(result.split(",")[1]);
-          device.setLongitude(lon);
+        if (lat == 0 && lon == 0) {
+          InetAddress inetAddress = InetAddress.getByName(host);
+          GeoIPAnalyser geoIPAnalyser = new GeoIPAnalyser(mHeader,
+                                                          mMainWindow,
+                                                          inetAddress.getHostAddress());
+          String result = (String) mMainWindow.submitToExecutorService(geoIPAnalyser).get();
+          // Allow for local IP addresses being found
+          if (!NO_RESULT_FOUND.equals(result)) {
+            ip = inetAddress.getHostAddress();
+            lat = parseFloat(result.split(",")[0]);
+            device.setLatitude(lat);
+            lon = parseFloat(result.split(",")[1]);
+            device.setLongitude(lon);
+          }
         }
+        WhoIsAnalyser wia = new WhoIsAnalyser(mHeader, mMainWindow, host);
+        owner = (String) mMainWindow.submitToExecutorService(wia).get();
       }
+    } catch (UnknownHostException ignored) {
     }
 
     mMainWindow.getVfm().lookupVulnerabilityForKeyword(device.getSoftware());
-    mMainWindow.getFoundInformation().addDevice(ip, lat, lon, device.getSoftware());
+    mMainWindow.getFoundInformation().addDevice(ip, lat, lon, device.getSoftware(), owner);
   }
 }

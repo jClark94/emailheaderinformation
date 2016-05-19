@@ -5,6 +5,7 @@ import java.util.List;
 
 public class FoundInformation {
   private String name;
+  private String organisation;
   private String software;
   private List<Fact> facts = new ArrayList<>();
   private List<Username> usernameList = new ArrayList<Username>();
@@ -48,8 +49,16 @@ public class FoundInformation {
     this.software = software;
   }
 
-  public void addDevice (String ip, float lat, float lon, String software) {
-    DeviceInformation di = new DeviceInformation(deviceCount++, ip, lat, lon, software);
+  public void addDevice (String ip, float lat, float lon, String software, String owner) {
+    DeviceInformation di = new DeviceInformation(deviceCount++, ip, lat, lon, software, owner);
     devices.add(di);
+  }
+
+  public String getOrganisation () {
+    return organisation;
+  }
+
+  public void setOrganisation (String organisation) {
+    this.organisation = organisation;
   }
 }

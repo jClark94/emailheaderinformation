@@ -29,11 +29,11 @@ public class MainWindow {
   private VulnerabilityFinderManager vfm;
   private JFrame mFrame;
   private JButton mStart;
-  private String mInputEmail = "";
+  private String mInputEmail;
   private MainWindow mSelf = this;
   private JTable mFoundInformationTable;
-  private FoundInformation foundInformation = new FoundInformation();
-  private ExecutorService mExecutorService = newFixedThreadPool(8);
+  private FoundInformation foundInformation;
+  private ExecutorService mExecutorService;
   private WebServer mWebServer;
 
   /**
@@ -42,6 +42,9 @@ public class MainWindow {
   public MainWindow () {
     initialize();
     vfm = new VulnerabilityFinderManagerImpl(this);
+    mExecutorService = newFixedThreadPool(8);
+    foundInformation = new FoundInformation();
+    mInputEmail = "";
   }
 
   /**
@@ -88,7 +91,7 @@ public class MainWindow {
     mStart.addActionListener(e -> {
       EmailParser emailParser = new EmailParser();
       Header header = emailParser.parse(mInputEmail);
-      HeaderAnalyser oha = new OxfordHeaderAnalyser(header, mSelf);
+      HeaderAnalyser oha = new UsernameHeaderAnalyser(header, mSelf);
       HeaderAnalyser eha = new ExchangeHeaderAnalyser(header, mSelf);
       HeaderAnalyser ci = new ClientInferrer(header, mSelf);
       HeaderAnalyser si = new SenderInformationExtractor(header, mSelf);
@@ -155,8 +158,10 @@ public class MainWindow {
                 });
                 sb.append(']');
                 webPage.append(s.replace("[]", sb.toString()));
-              } else if (s.contains("${software}")) {
+             } else if (s.contains("${software}")) {
                 webPage.append(s.replace("${software}", foundInformation.getSoftware()));
+              } else if (s.contains("${org}")) {
+                webPage.append(s.replace("${org}", foundInformation.getOrganisation()));
               } else if (s.contains("var products = [];")) {
                 webPage.append(s.replace("[]", gson.toJson(vfm.getKeywords())));
               } else if (s.contains("var servers = [];")) {
