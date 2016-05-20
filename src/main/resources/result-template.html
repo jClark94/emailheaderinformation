@@ -149,10 +149,22 @@
                         <th>Details</th>
                     </tr>
                 </thead>
-                <tbody class="list">
-                    <!-- to be filled in by list.js -->
-                </tbody>
+                <tbody class="list"> </tbody>
             </table>
+        </div>
+        <div id="server-list" class="row col-md-12">
+          <table id="server-table" class="table table-striped table-responsive table-bordered table-hover table-condensed">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Server</th>
+                <th>Time</th>
+                <th>Software</th>
+                <th>CVEs</th>
+              </tr>
+            </thead>
+            <tbody class="list"> </tbody>
+          </table>
         </div>
         <div id="hist-list" class="row col-md-12">
           <div class="col-md-12">
@@ -278,6 +290,11 @@
         for (let user of usernameEntries) {
             $('#user-list').append('<li><em>' + user.context + '</em><br/>' + user.username + '</li>');
         }
+
+	for (let server of servers) {
+		$('#server-table').append('<tr><td>' + server.id + '</td><td>' + server.ipAddress + '<br>(' + server.lat + ',' + server.lon + ')</td><td></td><td>' + server.software + '</td><td></td></td>');
+	
+	}
 
         var table = document.getElementById("fact-table");
         for (let fact of factentries) {
