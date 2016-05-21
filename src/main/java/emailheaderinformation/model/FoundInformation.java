@@ -55,7 +55,7 @@ public class FoundInformation {
   }
 
   public String getOrganisation () {
-    return organisation;
+    return organisation == null ? "" : organisation;
   }
 
   public void setOrganisation (String organisation) {
